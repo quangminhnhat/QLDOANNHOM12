@@ -1,0 +1,41 @@
+{
+  "name": "doancs",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "devstart": "nodemon --no-deprecation server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quangminhnhat/DoAnCS.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/quangminhnhat/DoAnCS/issues"
+  },
+  "homepage": "https://github.com/quangminhnhat/DoAnCS#readme",
+  "description": "",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "csurf": "^1.11.0",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-flash": "^0.0.2",
+    "express-session": "^1.18.1",
+    "m": "^1.9.1",
+    "method-override": "^3.0.0",
+    "msnodesqlv8": "^4.5.0",
+    "mssql": "^11.0.1",
+    "multer": "^2.0.1",
+    "multicast-dns": "^7.2.5",
+    "node-cron": "^4.1.1",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.5.0",
+    "nodemon": "^3.1.10"
+  }
+}

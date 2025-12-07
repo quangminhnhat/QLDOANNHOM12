@@ -1,0 +1,127 @@
+<header>
+    <div class="header-container">
+        <div class="logo">
+            <img src="/images/z6459306582259_85ca173d9f6beddf7ed7cd6dbfcaf7b1-removebg-preview.png" alt="Logo"
+                width="90" height="90">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Trang Chủ</a></li>
+                <li><a href="/school">Trung Tâm</a></li>
+                <li>
+                    <a href="#0">Thư Viện</a>
+                    <ul>
+                        <li><a href="https://drive.google.com/drive/folders/1j_lNKViTx_UUyZNXRlkhRd-w9ghDxAYB">Sách Giáo
+                                Khoa</a>
+                        </li>
+                        <li><a href="#0">Tài Liệu Tham Khảo</a></li>
+                        <li><a href="#0">Tài Liệu Tiếng Anh</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="/news">Tin Tức - Sự Kiện</a>
+                </li>
+            </ul>
+        </nav>
+
+        <% if (!user) { %>
+        <a href="/login" class="login-btn">
+            <i class="fa-solid fa-user"></i> Login
+        </a>
+        <% } else { %>
+        <div id="nav-bar">
+            <input type="checkbox" id="nav-toggle" />
+            <div id="nav-header">
+                <a id="nav-title" href="https://codepen.io" target="_blank"
+                    style="display:flex;align-items:center;gap:12px;">
+                    <img class="logo" src="/images/z6459306582259_85ca173d9f6beddf7ed7cd6dbfcaf7b1-removebg-preview.png"
+                        alt="Logo" style="width:40px;height:40px;object-fit:contain;">
+
+                </a>
+                <label for="nav-toggle">
+                    <span id="nav-toggle-burger"></span>
+                </label>
+                <hr>
+            </div>
+            <div id="nav-content">
+                <a href="/" class="nav-button"><i class="fas fa-house"></i><span>Home</span></a>
+
+                <!-- Common options for all authenticated users -->
+                <% if (user.role === 'teacher' || user.role === 'student') { %>
+                <a href="/schedule" class="nav-button"><i class="fas fa-calendar"></i><span>My Schedule</span></a>
+                <a href="/my-courses" class="nav-button"><i class="fas fa-chalkboard"></i><span>My courses</span></a>
+                
+                <% } %>
+                <a href="/notifications" class="nav-button"><i class="fas fa-bell"></i><span>Notifications</span></a>
+                <a href="/profile" class="nav-button"><i class="fas fa-user"></i><span>Profile</span></a>
+                <% if (user.role === 'student') { %>
+                <a href="/available-courses" class="nav-button">
+                    <i class="fas fa-book-reader"></i><span>Available Courses</span>
+                </a>
+                <% } %>
+                <a href="/exams" class="nav-button"><i class="fas fa-file-alt"></i><span>Exams</span></a>
+                <a href="/requests" class="nav-button"><i class="fas fa-file-alt"></i><span>Requests</span></a>
+                <a href="/materials" class="nav-button"><i class="fas fa-file"></i><span>Materials</span></a>
+                <!-- Teacher & Admin only options -->
+                <% if (user.role==='admin' || user.role==='teacher' ) { %>
+                <a href="/classes" class="nav-button"><i class="fas fa-users"></i><span>Classes</span></a>
+                <a href="/upload" class="nav-button"><i class="fas fa-upload"></i><span>Upload
+                        Material</span></a>
+                <% } %>
+
+                <!-- Admin only options -->
+                <% if (user.role === 'admin') { %>
+                <a href="/courses" class="nav-button"><i class="fas fa-book"></i><span>Courses</span></a>
+                <a href="/users" class="nav-button"><i class="fas fa-user-cog"></i><span>User List</span></a>
+                <a href="/register" class="nav-button"><i class="fas fa-user-plus"></i><span>Register User</span></a>
+                <a href="/enrollments" class="nav-button"><i class="fas fa-user-plus"></i><span>Enrollments</span></a>
+                <a href="/courses/new" class="nav-button"><i class="fas fa-plus"></i><span>Add Course</span></a>
+                <a href="/classes/new" class="nav-button"><i class="fas fa-plus"></i><span>Add Class</span></a>
+                <a href="/enrollments/new" class="nav-button"><i class="fas fa-plus"></i><span>Add Enrollment</span></a>
+
+                <a href="/schedule/new" class="nav-button"><i class="fas fa-plus"></i><span>Add Schedule</span></a>
+                <% } %>
+
+                <!-- Logout button for all authenticated users -->
+                <div class="nav-button">
+                    <form action="/logout?_method=DELETE" method="POST">
+                        <button type="submit" class="nav-button">
+                            <i class="fas fa-right-from-bracket"></i><span>Logout</span>
+                        </button>
+                    </form>
+                </div>
+
+                <div id="nav-content-highlight"></div>
+            </div>
+
+
+
+            <input type="checkbox" id="nav-footer-toggle" />
+            <div id="nav-footer">
+                <div id="nav-footer-heading">
+                    <div id="nav-footer-avatar">
+                        <img src="<%= user.profile_pic ? '/' + user.profile_pic.replace(/\\/g, '/') : '/uploads/profile_pic/default_profile_pic.png' %>" alt="User Avatar" />
+                    </div>
+                    <div id="nav-footer-titlebox">
+                        <a id="nav-footer-title" href="/profile"><%= user.username %></a>
+                        <span id="nav-footer-subtitle"><%= user.role %></span>
+                    </div>
+                    <label for="nav-footer-toggle">
+                        <i class="fas fa-caret-up"></i>
+                    </label>
+                </div>
+                <div id="nav-footer-content">
+                    <p><i class="fas fa-user fa-fw"></i> <%= user.full_name || 'N/A' %></p>
+                    <p><i class="fas fa-envelope fa-fw"></i> <%= user.email || 'N/A' %></p>
+                    <p><i class="fas fa-phone fa-fw"></i> <%= user.phone_number || 'N/A' %></p>
+                </div>
+            </div>
+        </div>
+
+        <% } %>
+
+
+
+    </div>
+
+</header>

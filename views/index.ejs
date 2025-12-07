@@ -1,0 +1,160 @@
+<section id="Slider"></section>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trang Chủ</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css">
+  <!-- link swiper-->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <link rel="stylesheet"
+    href="https://demos.creative-tim.com/notus-js/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css">
+</head>
+
+<body>
+  <%- include('../views/shared/header.ejs') %>
+
+  <div class="slider-container index-slider">
+
+    <!-- items lish-->
+    <div class="slider-wrapper swiper-wrapper">
+      <div class="slider-item swiper-slide">
+        <div class="slide-content">
+          <h3 class="slide-subtitle"></h3>
+          <h2 class="slide-title"></h2>
+          <p class="slide-description"></p>
+          <a href="#" class="slide-button">Tìm Hiểu Thêm</a>
+        </div>
+      </div>
+      <div class="slider-item swiper-slide">
+        <div class="slide-content">
+          <h3 class="slide-subtitle"></h3>
+          <h2 class="slide-title"></h2>
+          <p class="slide-description"></p>
+          <a href="#" class="slide-button">Tìm Hiểu Thêm</a>
+        </div>
+      </div>
+      <div class="slider-item swiper-slide">
+        <div class="slide-content">
+          <h3 class="slide-subtitle"></h3>
+          <h2 class="slide-title"></h2>
+          <p class="slide-description"></p>
+          <a href="#" class="slide-button">Tìm Hiểu Thêm</a>
+        </div>
+      </div>
+      <div class="slider-item swiper-slide">
+        <div class="slide-content">
+          <h3 class="slide-subtitle"></h3>
+          <h2 class="slide-title"></h2>
+          <p class="slide-description"> </p>
+          <a href="#" class="slide-button">Tìm Hiểu Thêm</a>
+        </div>
+      </div>
+      <div class="slider-item swiper-slide">
+        <div class="slide-content">
+          <h3 class="slide-subtitle"></h3>
+          <h2 class="slide-title"></h2>
+          <p class="slide-description"></p>
+          <a href="#" class="slide-button">Tìm Hiểu Thêm</a>
+        </div>
+      </div>
+    </div>
+    <!-- slide button-->
+    <div class="slider-controls">
+
+      <ul class="slider-pagination">
+        <div class="slider-indicator"></div>
+        <li class="slider-tab"></li>
+        <li class="slider-tab"></li>
+        <li class="slider-tab"></li>
+        <li class="slider-tab"></li>
+        <li class="slider-tab"></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="slider-title" style="
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #2563eb;
+  text-align: center;
+  margin: 40px 0 30px 0;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 8px rgba(37,99,235,0.08), 0 1px 0 #fff;
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+  position: relative;
+  display: inline-block;
+  width: 100%;
+">
+    <span style="
+    background: linear-gradient(90deg, #2563eb 60%, #60a5fa 100%);
+    color: #fff;
+    padding: 8px 36px;
+    border-radius: 32px;
+    box-shadow: 0 2px 12px rgba(37,99,235,0.10);
+    display: inline-block;
+    position: relative;
+    z-index: 1;
+  ">
+      <i class="fas fa-star" style="color:#facc15;margin-right:12px;"></i>
+      Khóa học nổi bật
+      <i class="fas fa-star" style="color:#facc15;margin-left:12px;"></i>
+    </span>
+  </div>
+
+  <div class="news-slider-container">
+    <button class="news-slider-arrow left"><i class="fas fa-chevron-left"></i></button>
+    <div class="news-section swiper news-swiper">
+      <div class="swiper-wrapper">
+        <% if (courses && courses.length) { %>
+           <% /* normalize various stored image paths and provide a fallback */ %>
+           <% function imageSrc(img) {
+             if (!img) return '/images/placeholder.svg';
+             if (typeof img !== 'string') return '/images/placeholder.svg';
+             img = String(img).replace(/\\\\/g, '/'); // backslashes -> slashes
+             if (/^https?:\/\//i.test(img)) return img; // full url
+             if (img.startsWith('/')) return img; // already absolute
+             if (img.startsWith('uploads/')) return '/' + img; // uploaded files served at /uploads
+             if (img.startsWith('images/')) return '/' + img; // existing public images
+             // bare filename — assume it's in public/images
+             return '/images/' + img;
+           } %>
+           <% courses.forEach(function(course) { %>
+        <div class="news-item2 swiper-slide">
+          <img src="<%= imageSrc(course.img) %>" alt="Course Image" onerror="this.onerror=null;this.src='/images/placeholder.svg'">
+          <div class="news-content">
+            <div class="news-title">
+              <a href="/course-detail/<%= course.id %>"><%= course.title %></a>
+            </div>
+            <div class="news-description">
+              <%= course.course_desc %>
+            </div>
+          </div>
+        </div>
+        <% }); %>
+        <% } else { %>
+        <div class="news-item2 swiper-slide">
+          <div class="news-content">
+            <div class="news-title">No courses available</div>
+          </div>
+        </div>
+        <% } %>
+      </div>
+    </div>
+    <button class="news-slider-arrow right"><i class="fas fa-chevron-right"></i></button>
+  </div>
+  <button class="news-slider-arrow right"><i class="fas fa-chevron-right"></i></button>
+  
+  <!-- news-slider-container dưới khoá học kỹ năng -->
+ 
+
+  <%- include('../views/shared/footer.ejs') %>
+  <!-- link swiper-->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script src="/js/script.js"></script>
+</body>
+
+</html>

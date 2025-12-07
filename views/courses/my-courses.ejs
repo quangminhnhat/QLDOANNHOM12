@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Courses</title>
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet"
+        href="https://demos.creative-tim.com/notus-js/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css">
+    <style>
+        .modern-container {
+            max-width: 900px;
+            margin: 48px auto 0 auto;
+            padding: 2.5rem 2rem 2rem 2rem;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(44, 62, 80, 0.10);
+            border: 1px solid #e3e6ed;
+            animation: fadeIn 0.5s;
+        }
+        .modern-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2375D8;
+            text-align: center;
+            margin-bottom: 2rem;
+            letter-spacing: 1px;
+        }
+        .modern-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f7fafc;
+            border-radius: 10px;
+        }
+        .modern-section-title {
+            font-size: 1.25rem;
+            color: #4a5568;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        .modern-courses-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .modern-course-card {
+            background: #fff;
+            border: 1px solid #e3e6ed;
+            border-radius: 12px;
+            padding: 1.5rem 1.25rem;
+            box-shadow: 0 2px 8px rgba(44, 62, 80, 0.06);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            transition: box-shadow 0.2s;
+        }
+        .modern-course-card:hover {
+            box-shadow: 0 8px 24px rgba(36, 117, 216, 0.10);
+        }
+        .modern-course-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modern-course-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #2375D8;
+        }
+        .modern-student-count {
+            font-size: 0.95rem;
+            color: #4a5568;
+            background: #edf2f7;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+        .modern-course-info {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            font-size: 1rem;
+            color: #4A5568;
+        }
+        .modern-course-fee {
+            font-weight: 600;
+        }
+        .modern-payment-badge {
+            font-size: 0.95rem;
+            padding: 2px 16px;
+            border-radius: 16px;
+            font-weight: 600;
+            color: #fff;
+            display: inline-block;
+        }
+        .modern-payment-badge.paid {
+            background-color: #38B2AC;
+            color: #fff;
+        }
+        .modern-payment-badge.unpaid {
+            background-color: #F56565;
+            color: #fff;
+        }
+        .modern-course-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.2rem;
+            font-size: 0.98rem;
+        }
+        .modern-detail-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+        .modern-detail-label {
+            color: #718096;
+            font-size: 0.92rem;
+            font-weight: 500;
+        }
+        .modern-detail-value {
+            font-weight: 600;
+            color: #2d3748;
+        }
+        .modern-teacher-info {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .modern-teacher-avatar {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #e2e8f0;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(18px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+    </style>
+</head>
+<body>
+    <%- include('../shared/header.ejs') %>
+
+    <main>
+        <div class="modern-container">
+            <div class="modern-title">
+                <i class="fas fa-chalkboard"></i> My Courses
+            </div>
+            <div class="modern-section">
+                <div class="modern-section-title">
+                    <i class="fas fa-list"></i> Danh sách khóa học của bạn
+                </div>
+                <div class="modern-courses-list">
+                    <% if (courses.length === 0) { %>
+                        <div style="color:#718096;font-size:1.1rem;">Bạn chưa đăng ký khóa học nào.</div>
+                    <% } %>
+                    <% courses.forEach(course => { %>
+                        <div class="modern-course-card">
+                            <div class="modern-course-header">
+                                <div class="modern-course-title"><%= course.course_name %></div>
+                                <% if (user.role === 'teacher') { %>
+                                <div class="modern-student-count">
+                                    Students: <%= course.student_count %> (Paid: <%= course.paid_students %>)
+                                </div>
+                                <% } %>
+                            </div>
+                            <div class="modern-course-info">
+                                <div class="modern-course-fee">
+                                    Fee: <%= course.tuition_fee ? `$${course.tuition_fee.toLocaleString()}` : 'Not set' %>
+                                </div>
+                                <% if (user.role === 'student') { %>
+                                <div class="modern-payment-badge <%= course.payment_status ? 'paid' : 'unpaid' %>">
+                                    <%= course.payment_status ? 'Paid' : 'Unpaid' %>
+                                </div>
+                                <% } %>
+                            </div>
+                            <div class="modern-course-details">
+                                <div class="modern-detail-group">
+                                    <span class="modern-detail-label">Class Schedule</span>
+                                    <span class="modern-detail-value">
+                                        <%= course.class_name %><br>
+                                        <%= course.class_start_time %> - <%= course.class_end_time %><br>
+                                        Weekly: <%= course.weekly_schedule.split(',').map(day => ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][day-1]).join(', ') %>
+                                    </span>
+                                </div>
+                                <% if (user.role === 'student') { %>
+                                <div class="modern-detail-group">
+                                    <span class="modern-detail-label">Teacher</span>
+                                    <span class="modern-detail-value modern-teacher-info">
+                                        <div class="modern-teacher-avatar"></div>
+                                        <div>
+                                            <%= course.teacher_name %><br>
+                                            Email: <%= course.teacher_email %><br>
+                                            Phone: <%= course.teacher_phone %>
+                                        </div>
+                                    </span>
+                                </div>
+                                <% } %>
+                                <div class="modern-detail-group">
+                                    <span class="modern-detail-label">Description</span>
+                                    <span class="modern-detail-value">
+                                        <%= course.course_description || 'No description available' %>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="relative bg-blueGray-200 pt-8 pb-6">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-wrap text-left lg:text-left">
+                <div class="w-full lg:w-6/12 px-4">
+                    <h4 class="text-3xl fonat-semibold text-blueGray-700">Liên hệ với chúng tôi!</h4>
+                    <h5 class="text-lg mt-0 mb-2 text-blueGray-600">
+                        Tìm kiếm chúng tôi trên bất kỳ mạng xã hội nào và gửi cho chúng tôi một tin nhắn! Chúng tôi sẽ trả
+                        lời bạn
+                        ngay khi có thể.
+                    </h5>
+                    <div class="mt-6 lg:mb-0 mb-6">
+                        <button
+                            class="bg-white text-lightBlue-400 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
+                            type="button">
+                            <i class="fab fa-twitter"></i></button><button
+                            class="bg-white text-lightBlue-600 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
+                            type="button">
+                            <i class="fab fa-facebook-square"></i></button><button
+                            class="bg-white text-pink-400 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
+                            type="button">
+                            <i class="fab fa-dribbble"></i></button><button
+                            class="bg-white text-blueGray-800 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
+                            type="button">
+                            <i class="fab fa-github"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="w-full lg:w-6/12 px-4">
+                    <div class="flex flex-wrap items-top mb-6">
+                        <div class="w-full lg:w-4/12 px-4 ml-auto">
+                            <span class="block uppercase text-blueGray-500 text-sm font-semibold mb-2">Bạn Đang Tìm
+                                Kiếm</span>
+                            <ul class="list-unstyled">
+                                <li>
+                                    <a class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
+                                        href="">Liên
+                                        Hệ</a>
+                                </li>
+                                <li>
+                                    <a class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
+                                        href="">Thông
+                                        Tin Mới</a>
+                                </li>
+                                <li>
+                                    <a class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
+                                        href="">Tuyển
+                                        Dụng</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-6 border-blueGray-300">
+            <div class="flex flex-wrap items-center md:justify-between justify-center">
+                <div class="w-full md:w-4/12 px-4 mx-auto text-center">
+                    <div class="text-sm text-blueGray-500 font-semibold py-1">
+                        Copyright © <span id="get-current-year">2025</span><a href="https://www.facebook.com/ttgdvpttnht"
+                            class="text-blueGray-500 hover:text-gray-800" target="_blank"> Talent Education</a>. Made by
+                        <a href="https://github.com/Rin-0808" class="text-blueGray-500 hover:text-blueGray-800">Rin</a>.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="/js/script.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+</body>
+</html>

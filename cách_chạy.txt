@@ -1,0 +1,9 @@
+tải node.js chạychạy và khi thấy powershell nhấn enter
+dô cmd của file: chạy npm run dev start
+
+tạo .env
+có SECRET_KEY={bấm đại tùy ý}
+
+tải module chay cái ngay dưới trong commmand promtpromt:
+npm i dotenv nodemon --save-dev
+npm i

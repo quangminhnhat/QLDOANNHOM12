@@ -1,0 +1,214 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Courses</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet"
+        href="https://demos.creative-tim.com/notus-js/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        main,
+        .modern-container {
+            flex: 1 0 auto;
+        }
+
+        footer {
+            flex-shrink: 0;
+        }
+
+        .modern-container {
+            max-width: 1100px;
+            margin: 48px auto 0 auto;
+            padding: 2.5rem 2rem 2rem 2rem;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(44, 62, 80, 0.10);
+            border: 1px solid #e3e6ed;
+            animation: fadeIn 0.5s;
+        }
+
+        .modern-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2375D8;
+            text-align: center;
+            margin-bottom: 2rem;
+            letter-spacing: 1px;
+        }
+
+        .modern-btn-primary {
+            background: linear-gradient(90deg, #2375D8 0%, #0c9083 100%);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(36, 117, 216, 0.10);
+            transition: background 0.2s, transform 0.15s;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+            text-decoration: none;
+        }
+
+        .modern-btn-primary:hover {
+            background: linear-gradient(90deg, #0c9083 0%, #2375D8 100%);
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 8px 24px rgba(36, 117, 216, 0.18);
+        }
+
+        .modern-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+            background: #f9fafb;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(44, 62, 80, 0.06);
+        }
+
+        .modern-table th,
+        .modern-table td {
+            padding: 1rem 1.2rem;
+            text-align: left;
+        }
+
+        .modern-table th {
+            background: #2375D8;
+            color: #fff;
+            font-weight: 600;
+            font-size: 1rem;
+            border-bottom: 2px solid #e3e6ed;
+            text-align: center;
+        }
+
+        .modern-table tbody tr {
+            background: #fff;
+            transition: background 0.2s;
+        }
+
+        .modern-table tbody tr:hover {
+            background: #e6f0fa;
+        }
+
+        .modern-table td {
+            border-bottom: 1px solid #e3e6ed;
+            font-size: 1rem;
+            color: #374151;
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .modern-table .actions form button {
+            color: #2375D8;
+            font-size: 1.1rem;
+            transition: color 0.2s;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0 0.3rem;
+        }
+
+        .modern-table .actions form button:hover {
+            color: #0c9083;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modern-search-sort {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .modern-search-sort {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('../shared/header.ejs') %>
+
+    <main class="course-detail-container custom-course-detail">
+        <div class="course-detail-banner custom-banner">
+            <%
+        function imageSrc(img) {
+          if (!img) return '/images/placeholder.svg';
+          if (typeof img !== 'string') return '/images/placeholder.svg';
+          img = String(img).replace(/\\\\/g, '/');
+          if (/^https?:\/\//i.test(img)) return img;
+          if (img.startsWith('/')) return img;
+          if (img.startsWith('uploads/')) return '/' + img;
+          if (img.startsWith('images/')) return '/' + img;
+          return '/images/' + img;
+        }
+      %>
+            <img src="<%= imageSrc(course.image_path) %>" alt="<%= course.course_name %>"
+                class="course-detail-img custom-banner-img"
+                onerror="this.onerror=null;this.src='/images/placeholder.svg'">
+            <div class="course-detail-titlebox custom-banner-titlebox">
+                <h1 class="course-detail-title custom-banner-title"><%= course.course_name %></h1>
+                <p class="course-detail-shortdesc custom-banner-desc">
+                    <%= course.description.substring(0, 150) %>...
+                </p>
+            </div>
+        </div>
+        <section class="course-detail-content custom-content">
+            <h2 class="custom-section-title">Giới thiệu khoá học</h2>
+            <p>
+                <%- course.description.replace(/\n/g, '<br>') %>
+            </p>
+            <div class="custom-section">
+                <h3>Liên hệ đăng ký</h3>
+                <p>
+                    Để biết thêm thông tin chi tiết, vui lòng liên hệ <a href="tel:0123456789" class="custom-link">0123
+                        456 789</a> hoặc <a href="/contact" class="custom-link">gửi tin nhắn tại đây</a>.
+                </p>
+            </div>
+            <div class="custom-btn-wrap">
+                <% if (!user) { %>
+                <a href="/login" onclick="showRegisterPopup(event)"
+                    class="course-detail-register-btn custom-register-btn">Đăng ký ngay</a>
+                <% } else { %>
+                <a href="/available-courses" class="course-detail-register-btn custom-register-btn">Đăng ký ngay</a>
+                <% } %>
+            </div>
+        </section>
+    </main>
+    <%- include('../shared/footer.ejs') %>
+</body>
+
+</html>

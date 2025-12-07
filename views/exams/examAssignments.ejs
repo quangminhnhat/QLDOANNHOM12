@@ -1,0 +1,320 @@
+<section id="Slider"></section>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Chủ</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css">
+    <!-- link swiper-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet"
+        href="https://demos.creative-tim.com/notus-js/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css">
+    <style>
+        /* Modern UI controls (comprehensive) - variables scoped to container */
+        .modern-container {
+            /* design tokens scoped here (no :root) */
+            --primary-500: #2375D8;
+            --accent-500: #06b6d4;
+            --success-500: #10b981;
+            --danger-500: #ef4444;
+            --muted: #6b7280;
+            --surface: #ffffff;
+            --border: #e6eef8;
+
+            /* container layout */
+            max-width: 1100px;
+            margin: 36px auto;
+            padding: 1.5rem;
+            background: var(--surface);
+            border-radius: 14px;
+            box-shadow: 0 8px 30px rgba(44,62,80,0.06);
+            border: 1px solid var(--border);
+            animation: fadeIn .35s ease;
+        }
+        .modern-title { font-size:1.25rem; color:var(--primary-500); font-weight:700; }
+
+        /* Buttons */
+        .modern-btn {
+            display:inline-flex; align-items:center; gap:.5rem; padding:.55rem .9rem;
+            border-radius:10px; font-weight:700; cursor:pointer; transition:all .14s ease; border:1px solid transparent;
+        }
+        .modern-btn-primary {
+            background: linear-gradient(90deg,var(--primary-500) 0%,var(--accent-500) 100%);
+            color:#fff; box-shadow:0 8px 24px rgba(35,117,216,0.08);
+        }
+        .modern-btn-primary:hover { transform:translateY(-2px); box-shadow:0 14px 36px rgba(35,117,216,0.12); }
+        .modern-btn-secondary {
+            background:#f3f6fb; color:var(--primary-500); border:1px solid var(--border);
+        }
+        .modern-btn-secondary:hover { transform:translateY(-1px); }
+
+        /* Small action buttons */
+        .action-btn {
+            display:inline-flex; align-items:center; gap:.45rem; padding:.35rem .5rem; border-radius:8px;
+            border:1px solid rgba(35,117,216,0.12); color:var(--primary-500); background:transparent; cursor:pointer;
+            font-weight:600; font-size:.92rem; transition:all .12s ease;
+        }
+        .action-btn:hover { background:rgba(35,117,216,0.04); transform:translateY(-1px); }
+        .action-btn-danger { color:var(--danger-500); border-color: rgba(239,68,68,0.12); }
+
+        /* Form controls */
+        .modern-form-control {
+            width:100%; padding:.62rem .75rem; border:1px solid var(--border); border-radius:10px;
+            background:#fff; box-sizing:border-box; transition:box-shadow .12s ease, border-color .12s ease;
+            font-size:.96rem; color:#142233;
+        }
+        .modern-form-control:focus {
+            outline:none; border-color:var(--primary-500); box-shadow:0 8px 30px rgba(35,117,216,0.08);
+        }
+
+        /* Table */
+        .modern-table { width:100%; border-collapse:separate; border-spacing:0 10px; }
+        .modern-table thead th { text-align:left; font-weight:700; color:#334155; padding:.9rem 1rem; font-size:.95rem; }
+        .modern-table tbody tr { background:transparent; }
+        .modern-table tbody td {
+            background:var(--surface); padding:.85rem 1rem; border:1px solid #eef4fb; border-radius:8px; vertical-align:middle;
+            color:#334155; font-size:.95rem;
+        }
+        .modern-table tbody td:first-child { border-radius:8px 0 0 8px; }
+        .modern-table tbody td:last-child { border-radius:0 8px 8px 0; }
+        .modern-table tbody tr td .badge { font-weight:700; padding:.25rem .6rem; border-radius:999px; }
+
+        .muted { color:var(--muted); font-size:.94rem; }
+        .alert { padding:.8rem 1rem; border-radius:8px; margin-bottom:1rem; }
+        .alert-success { background:#ecfdf5; color:#065f46; border:1px solid #d1fae5; }
+        .alert-error { background:#fff1f2; color:#7f1d1d; border:1px solid #fecaca; }
+
+        @keyframes fadeIn { from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;} }
+    </style>
+</head>
+
+<body>
+<%- include('../shared/header') %>
+
+<div class="modern-container">
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:1rem; margin-bottom:1rem;">
+        <div style="display:flex; gap:1rem; align-items:center;">
+            <a href="/exams" class="modern-btn-secondary"><i class="fas fa-arrow-left"></i> Back</a>
+            <div>
+                <div class="modern-title">Exam: <%= exam.exam_title %></div>
+                <div class="muted">Code: <%= exam.exam_code %></div>
+            </div>
+        </div>
+        <div>
+            <button type="button" class="modern-btn-primary" data-bs-toggle="modal" data-bs-target="#assignExamModal">
+                <i class="fas fa-plus"></i> Assign to Class
+            </button>
+        </div>
+    </div>
+
+    <% if (flashMessage) { %>
+        <div class="alert alert-<%= flashMessage.type %> alert-dismissible fade show" role="alert">
+            <%= flashMessage.message %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <% } %>
+
+    <div>
+        <h5 style="margin-bottom:.75rem;">Current Assignments</h5>
+        <div style="overflow:auto;">
+            <table class="table modern-table" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th>Class</th>
+                        <th>Open From</th>
+                        <th>Close At</th>
+                        <th>Max Attempts</th>
+                        <th>Students</th>
+                        <th colspan="2">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% assignments.forEach(assignment => { %>
+                        <tr>
+                            <td><%= assignment.class_name %></td>
+                            <td><%= new Date(assignment.open_at).toLocaleString('en-US', { year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' }) %></td>
+                            <td><%= new Date(assignment.close_at).toLocaleString('en-US', { year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' }) %></td>
+                            <td><%= assignment.max_attempts || 'Unlimited' %></td>
+                            <td><%= assignment.student_count %></td>
+                            <td>
+                                <a href="/exams/assignments/<%= assignment.assignment_id %>/scores" class="action-btn" title="View Scores"><i class="fas fa-chart-bar"></i> Scores</a>
+                            </td>
+                            <td>
+                                <button data-assignment-id="<%= assignment.assignment_id %>" class="action-btn action-btn-danger btn-delete-assignment" title="Remove assignment">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    <% }) %>
+                    <% if (assignments.length === 0) { %>
+                        <tr><td colspan="7" style="text-align:center; color:#888; padding:1rem;">No classes assigned yet</td></tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+<!-- Modal for assigning to new class -->
+<div class="modal fade" id="assignExamModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius:12px; overflow:hidden;">
+            <div class="modal-header" style="background:linear-gradient(90deg,#2375D8 0%,#06b6d4 100%); color:#fff; align-items:center;">
+                <div style="display:flex; gap:.75rem; align-items:center;">
+                    <div style="width:44px;height:44px;border-radius:8px;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;">
+                        <i class="fas fa-calendar-plus" style="font-size:18px;"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title" style="margin:0; font-weight:700;">Assign Exam to Class</h5>
+                        <div style="font-size:.85rem; opacity:.9;">Choose a class and set availability</div>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter:invert(1) opacity:.9;"></button>
+            </div>
+            <div class="modal-body" style="padding:1.25rem;">
+                <!-- converted form -> div to let JS control submit (preserve behavior) -->
+                <div id="assignExamForm" data-action="/exams/<%= exam.exam_id %>/assign">
+                    <div class="alert alert-info mb-3" style="background:#f3f9ff; border-color:#e1f0ff; color:#0b69c8; padding:.6rem .85rem; border-radius:8px;">
+                        Fields marked with <span class="text-danger">*</span> are required.
+                    </div>
+
+                    <div style="margin-bottom:.9rem;">
+                        <label for="classSelect" class="form-label" style="font-weight:700; display:block; margin-bottom:.35rem;">
+                            Select Class <span class="text-danger">*</span>
+                        </label>
+                        <select class="modern-form-control" id="classSelect" name="class_id" style="padding:.65rem .8rem;">
+                            <option value="">Choose a class...</option>
+                            <% availableClasses.forEach(cls => { %>
+                                <option value="<%= cls.id %>"><%= cls.class_name %></option>
+                            <% }) %>
+                        </select>
+                        <div class="form-text text-danger d-none" id="classSelectError" style="margin-top:.4rem; font-size:.88rem;">Please select a class</div>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:.8rem; margin-bottom:.6rem;">
+                        <div>
+                            <label for="openAt" class="form-label" style="font-weight:700; display:block; margin-bottom:.35rem;">
+                                Open From <span class="text-danger">*</span>
+                            </label>
+                            <input type="datetime-local" class="modern-form-control" id="openAt" name="open_at" style="padding:.55rem .6rem;">
+                            <div class="form-text text-danger d-none" id="openAtError" style="margin-top:.4rem; font-size:.88rem;">Please specify when the exam opens</div>
+                        </div>
+
+                        <div>
+                            <label for="closeAt" class="form-label" style="font-weight:700; display:block; margin-bottom:.35rem;">
+                                Close At <span class="text-danger">*</span>
+                            </label>
+                            <input type="datetime-local" class="modern-form-control" id="closeAt" name="close_at" style="padding:.55rem .6rem;">
+                            <div class="form-text text-danger d-none" id="closeAtError" style="margin-top:.4rem; font-size:.88rem;">Please specify when the exam closes</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom:.25rem;">
+                        <label for="maxAttempts" class="form-label" style="font-weight:700; display:block; margin-bottom:.35rem;">
+                            Maximum Attempts
+                        </label>
+                        <input type="number" class="modern-form-control" id="maxAttempts" name="max_attempts" min="1" placeholder="Leave empty for unlimited" style="padding:.55rem .6rem;">
+                        <div class="form-text" style="margin-top:.35rem; color:#6b7280; font-size:.9rem;">Leave empty for unlimited attempts</div>
+                    </div>
+                </div>
+             </div>
+
+             <div class="modal-footer" style="display:flex; gap:.6rem; padding:.9rem 1.25rem; border-top:none;">
+                <button type="button" class="modern-btn-secondary" data-bs-dismiss="modal" style="padding:.5rem .9rem; border-radius:8px;">Cancel</button>
+                <button type="button" class="modern-btn-primary" onclick="assignExam()" style="padding:.5rem 1rem; border-radius:8px;">
+                    <i class="fas fa-paper-plane" style="margin-right:.5rem;"></i> Assign
+                </button>
+             </div>
+         </div>
+     </div>
+ </div>
+</div>
+ <script>
+async function assignExam() {
+    const container = document.getElementById('assignExamForm');
+    const action = container.dataset.action || `/exams/<%= exam.exam_id %>/assign`;
+
+    // Reset error messages
+    ['classSelectError','openAtError','closeAtError'].forEach(id => document.getElementById(id).classList.add('d-none'));
+
+    const classId = document.getElementById('classSelect').value;
+    const openAt = document.getElementById('openAt').value;
+    const closeAt = document.getElementById('closeAt').value;
+    const maxAttempts = document.getElementById('maxAttempts').value;
+
+    let hasError = false;
+    if (!classId) { document.getElementById('classSelectError').classList.remove('d-none'); hasError = true; }
+    if (!openAt) { document.getElementById('openAtError').classList.remove('d-none'); hasError = true; }
+    if (!closeAt) { document.getElementById('closeAtError').classList.remove('d-none'); hasError = true; }
+    if (hasError) return;
+    if (new Date(closeAt) <= new Date(openAt)) {
+        document.getElementById('closeAtError').textContent = 'Close date must be after open date';
+        document.getElementById('closeAtError').classList.remove('d-none');
+        return;
+    }
+
+    try {
+        const response = await fetch(action, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                class_id: classId,
+                open_at: openAt,
+                close_at: closeAt,
+                max_attempts: maxAttempts || null
+            })
+        });
+        const data = await response.json();
+        if (data.success) window.location.reload();
+        else alert(data.message || 'Error assigning exam');
+    } catch (err) {
+        console.error('Error:', err);
+        alert('Error assigning exam');
+    }
+}
+
+async function deleteAssignment(assignmentId) {
+    if (!confirm('Are you sure you want to remove this assignment? Students will no longer have access to this exam.')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/exams/assignments/${assignmentId}`, {
+             method: 'DELETE',
+             headers: {
+                 'Content-Type': 'application/json'
+             }
+         });
+
+         const data = await response.json();
+         if (data.success) {
+             window.location.reload();
+         } else {
+             alert(data.message || 'Error removing assignment');
+         }
+     } catch (error) {
+         console.error('Error:', error);
+         alert('Error removing assignment');
+     }
+ }
+
+ // attach click handlers to buttons that carry the assignment id in a data- attribute
+ document.addEventListener('DOMContentLoaded', function () {
+     document.querySelectorAll('.btn-delete-assignment').forEach(function (btn) {
+         btn.addEventListener('click', function () {
+             const id = this.dataset.assignmentId;
+             deleteAssignment(id);
+         });
+     });
+ });
+ </script>
+
+<%- include('../shared/footer') %>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="/js/script.js"></script>
+</body>
+
+</html>

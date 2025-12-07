@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exam List</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css">
+
+    <style>
+
+        main, .modern-container {
+            flex: 1 0 auto;
+        }
+        footer {
+            flex-shrink: 0;
+        }
+
+        .modern-container {
+            max-width: 1100px;
+            margin: 48px auto;
+            padding: 2.5rem 2rem;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(44,62,80,0.10);
+            border: 1px solid #e3e6ed;
+            animation: fadeIn 0.45s ease;
+        }
+        .modern-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2375D8;
+            display:flex;
+            align-items:center;
+            gap:0.6rem;
+        }
+        .modern-btn-primary {
+            background: linear-gradient(90deg, #2375D8 0%, #0c9083 100%);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 0.6rem 1rem;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(36,117,216,0.10);
+            transition: background 0.2s, transform 0.12s;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+        }
+        .modern-btn-primary:hover { transform: translateY(-2px); }
+
+        .modern-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.06);
+        }
+        .modern-table th, .modern-table td {
+            padding: 0.9rem 1rem;
+            text-align: left;
+        }
+        .modern-table th {
+            background: #2375D8;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border-bottom: 2px solid #e3e6ed;
+        }
+        .modern-table tbody tr {
+            background: #fff;
+            transition: background 0.15s;
+        }
+        .modern-table tbody tr:hover { background: #f6fafc; }
+        .modern-table td { border-bottom: 1px solid #eef2f6; color: #374151; font-size:0.95rem; }
+        .actions { display:flex; gap:0.5rem; align-items:center; }
+
+        .badge {
+            display:inline-block;
+            padding:0.25rem 0.6rem;
+            border-radius:999px;
+            color:#fff;
+            font-size:0.85rem;
+            font-weight:600;
+        }
+        .bg-green-500 { background:#10b981; }
+        .bg-gray-400 { background:#9ca3af; }
+        .bg-blue-500 { background:#3b82f6; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(18px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .alert { padding:0.8rem 1rem; border-radius:8px; margin-bottom:1rem; }
+        .alert-success { background:#ecfdf5; color:#065f46; border:1px solid #d1fae5; }
+        .alert-error { background:#fff1f2; color:#7f1d1d; border:1px solid #fecaca; }
+    </style>
+</head>
+
+<body>
+<%- include('../shared/header') %>
+
+<main>
+    <div class="modern-container">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+            <div class="modern-title">
+                <i class="fas fa-file-alt"></i> <span>Exam List</span>
+            </div>
+
+            <% if (user.role === 'teacher') { %>
+            <a href="/exams/new" class="modern-btn-primary">
+                <i class="fas fa-plus"></i> New Exam
+            </a>
+            <% } %>
+        </div>
+
+        <% if (flashMessage) { %>
+            <div class="alert alert-<%= flashMessage.type === 'success' ? 'success' : 'error' %>">
+                <%= flashMessage.message %>
+            </div>
+        <% } %>
+
+        <div class="overflow-x-auto">
+            <table class="modern-table" aria-label="Exam list">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Title</th>
+                        <th>Teacher</th>
+                        <th>Duration</th>
+
+                        <% if (user.role === 'student') { %>
+                        <th>Open</th>
+                        <th>Close</th>
+                        <th>Status</th>
+                        <th>Score</th>
+                        <th>Attempts</th>
+                        <% } %>
+
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <% if (!exams || exams.length === 0) { %>
+                    <tr>
+                        <td colspan="<%= user.role === 'student' ? 9 : 5 %>" style="text-align:center; color:#888; padding:1.6rem;">
+                            No exams found
+                        </td>
+                    </tr>
+                    <% } else { %>
+                    <% exams.forEach(exam => { %>
+                    <tr>
+                        <td><%= exam.exam_code %></td>
+                        <td><%= exam.exam_title %></td>
+                        <td><%= exam.teacher_name %></td>
+                        <td><%= exam.duration_min %> min</td>
+
+                        <% if (user.role === 'student') { %>
+                        <td><%= exam.open_at ? new Date(exam.open_at).toLocaleString() : '—' %></td>
+                        <td><%= exam.close_at ? new Date(exam.close_at).toLocaleString() : '—' %></td>
+
+                        <td>
+                            <span class="badge <%= exam.exam_status === 'Available' ? 'bg-green-500' : exam.exam_status === 'Completed' ? 'bg-gray-400' : 'bg-blue-500' %>">
+                                <%= exam.exam_status %>
+                            </span>
+                        </td>
+
+                        <td>
+                            <% if (exam.total_score !== null && exam.total_points !== null) { %>
+                                <%= exam.total_score %> / <%= exam.total_points %>
+                            <% } else { %>N/A<% } %>
+                        </td>
+
+                        <td>
+                            <% if (exam.max_attempts) { %>
+                                <%= Math.max(0, exam.max_attempts - (exam.attempt_count || 0)) %> / <%= exam.max_attempts %>
+                            <% } else { %>Unlimited<% } %>
+                        </td>
+                        <% } %>
+
+                        <td class="actions">
+                            <% if (user.role === 'student' && exam.exam_status === 'Available') { %>
+                                <a href="/exams/<%= exam.assignment_id %>/take" class="modern-btn-primary" style="padding:0.4rem 0.8rem; font-size:0.9rem;">
+                                    Start
+                                </a>
+                            <% } %>
+
+                            <% if (user.role === 'teacher') { %>
+                                <a href="/exams/<%= exam.exam_id %>/edit" title="Edit" style="color:#2375D8;"><i class="fas fa-edit"></i></a>
+                                <a href="/exams/<%= exam.exam_id %>/assign" title="Assign" style="color:#2375D8;"><i class="fas fa-users"></i></a>
+                                <button onclick="deleteExam('<%= exam.exam_id %>')" title="Delete" style="background:none;border:none;color:#ef4444;cursor:pointer;"><i class="fas fa-trash"></i></button>
+                            <% } %>
+
+                            <% if (user.role === 'admin') { %>
+                                <button onclick="deleteExam('<%= exam.exam_id %>')" title="Delete" style="background:none;border:none;color:#ef4444;cursor:pointer;"><i class="fas fa-trash"></i></button>
+                            <% } %>
+                        </td>
+                    </tr>
+                    <% }) %>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<script>
+function deleteExam(id) {
+    if (!confirm("Delete exam?")) return;
+    fetch(`/exams/${id}`, { method: "DELETE" })
+        .then(res => {
+            if (!res.ok) throw new Error('Delete failed');
+            return res.json();
+        })
+        .then(() => location.reload())
+        .catch(() => alert('Could not delete exam.'));
+}
+</script>
+
+<%- include('../shared/footer') %>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>

@@ -32,18 +32,10 @@ const validateSchedule = require("./middleware/validateSchedule");
 app.use(express.static(path.join(__dirname, "public")));
 
 //routes
-const materialRoutes = require("./routes/materialRoutes");
-const notificationRoutes = require("./routes/notificationsroutes");
-const materialsRoutes = require("./routes/materialsroute");
+
 const userRoutes = require("./routes/usersRoutes");
-const courseRoutes = require("./routes/coursesRoutes");
-const uploadmaterialRoutes = require("./routes/upload-materialRoutes");
-const scheduleRoutes = require("./routes/scheduleRoutes");
-const classesRoutes = require("./routes/classesRoutes");
-const enrollmentsRoutes = require("./routes/enrollmentsRoutes");
 const miscroutes = require("./routes/MiscRoute");
-const requestRoute = require("./routes/requestRoute");
-const examRoutes = require("./routes/examRoutes");
+
 
 // Essential middleware
 app.use(express.json());
@@ -113,18 +105,8 @@ initalizePassport(
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 //routing
-app.use(materialRoutes);
-app.use(notificationRoutes);
-app.use(materialsRoutes);
 app.use(userRoutes);
-app.use(courseRoutes);
-app.use(uploadmaterialRoutes);
-app.use(scheduleRoutes);
-app.use(classesRoutes);
-app.use(enrollmentsRoutes);
 app.use(miscroutes);
-app.use(requestRoute);
-app.use(examRoutes);
 
 app.post(
   "/login",

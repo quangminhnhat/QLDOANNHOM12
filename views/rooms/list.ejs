@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Phòng</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 28px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .message {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            animation: slideDown 0.3s ease;
+        }
+
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #dee2e6;
+            color: #666;
+        }
+
+        tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s ease;
+        }
+
+        .btn-edit {
+            background-color: #ffc107;
+            color: #333;
+        }
+
+        .btn-edit:hover {
+            background-color: #e0a800;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background-color: #c82333;
+        }
+
+        .room-type-badge {
+            background-color: #e7f3ff;
+            color: #004085;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .empty-state h3 {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            margin-bottom: 20px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            max-width: 400px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .modal-content h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .modal-content p {
+            margin-bottom: 25px;
+            color: #666;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .modal-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .modal-buttons .btn-confirm {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .modal-buttons .btn-confirm:hover {
+            background-color: #c82333;
+        }
+
+        .modal-buttons .btn-cancel {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .modal-buttons .btn-cancel:hover {
+            background-color: #5a6268;
+        }
+
+        .price {
+            color: #28a745;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <%- include('../shared/header.ejs') %>
+
+    <div class="container">
+        <div class="header">
+            <h1>🏠 Quản Lý Phòng</h1>
+            <div class="btn-group">
+                <a href="/rooms/add" class="btn btn-primary">+ Thêm Phòng</a>
+            </div>
+        </div>
+
+        <% if (message) { %>
+            <div class="message <%= messageType %>">
+                <%= message %>
+            </div>
+        <% } %>
+
+        <div class="table-container">
+            <% if (rooms && rooms.length > 0) { %>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Số Phòng</th>
+                            <th>Loại Phòng</th>
+                            <th>Diện Tích (m²)</th>
+                            <th>Giá Thuê</th>
+                            <th>Đồ Dùng</th>
+                            <th>Hành Động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% rooms.forEach(room => { %>
+                            <tr>
+                                <td><strong><%= room.id %></strong></td>
+                                <td>
+                                    <a href="/rooms/view/<%= room.id %>" style="color: #007bff; text-decoration: none; font-weight: 600;">
+                                        <%= room.room_number %>
+                                    </a>
+                                </td>
+                                <td>
+                                    <span class="room-type-badge"><%= room.room_type %></span>
+                                </td>
+                                <td><%= room.size_sqm || 'N/A' %></td>
+                                <td class="price"><%= parseFloat(room.rent_price).toLocaleString('vi-VN') %> VND</td>
+                                <td><%= room.furniture_count %> đồ dùng</td>
+                                <td>
+                                    <div class="actions">
+                                        <a href="/rooms/edit/<%= room.id %>" class="btn-small btn-edit">✏️ Sửa</a>
+                                        <button class="btn-small btn-delete" onclick="showDeleteModal(<%= room.id %>, '<%= room.room_number %>')">🗑️ Xóa</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            <% } else { %>
+                <div class="empty-state">
+                    <div class="empty-state-icon">🏚️</div>
+                    <h3>Không có phòng nào</h3>
+                    <p>Bắt đầu bằng cách thêm một phòng mới</p>
+                    <a href="/rooms/add" class="btn btn-primary">+ Thêm Phòng</a>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <h3>Xác Nhận Xóa</h3>
+            <p>Bạn có chắc chắn muốn xóa phòng này không?<br><strong id="roomNumber"></strong></p>
+            <div class="modal-buttons">
+                <button class="btn-cancel" onclick="closeDeleteModal()">Hủy</button>
+                <button class="btn-confirm" onclick="confirmDelete()">Xóa</button>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../shared/footer.ejs') %>
+
+    <script>
+        let deleteRoomId = null;
+
+        function showDeleteModal(id, number) {
+            deleteRoomId = id;
+            document.getElementById('roomNumber').innerText = number;
+            document.getElementById('deleteModal').classList.add('show');
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('show');
+            deleteRoomId = null;
+        }
+
+        function confirmDelete() {
+            if (!deleteRoomId) return;
+
+            fetch(`/rooms/delete/${deleteRoomId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                closeDeleteModal();
+                if (data.success) {
+                    alert('Xóa phòng thành công');
+                    location.reload();
+                } else {
+                    alert('Lỗi: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Lỗi khi xóa phòng');
+                closeDeleteModal();
+            });
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('deleteModal');
+            if (event.target === modal) {
+                closeDeleteModal();
+            }
+        }
+
+        // Auto-hide success message after 5 seconds
+        const message = document.querySelector('.message');
+        if (message && message.classList.contains('success')) {
+            setTimeout(() => {
+                message.style.opacity = '0';
+                setTimeout(() => message.remove(), 300);
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

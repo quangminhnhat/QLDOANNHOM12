@@ -53,9 +53,8 @@ router.get("/users/:id/edit", checkAuthenticated, async (req, res) => {
   try {
     const userId = req.params.id;
     const query = `
-          SELECT u.id, u.username, u.role, u.full_name, u.email, u.phone_number, u.profile_pic, t.salary
+          SELECT u.id, u.username, u.role, u.full_name, u.email, u.phone_number, u.profile_pic
           FROM users u
-          LEFT JOIN teachers t ON u.id = t.user_id
           WHERE u.id = ?
         `;
 
@@ -90,7 +89,6 @@ router.post(
       full_name,
       email,
       phone_number,
-      salary,
       profile_pic,
     } = req.body;
     const userId = req.params.id;
@@ -161,17 +159,17 @@ router.post(
       // 4. Handle role-specific table changes if the role was modified
       if (role && oldRole !== role) {
         // ** NEW: Check for dependencies before changing role **
-        if (oldRole === "student") {
-          const studentDepsQuery = `
-            SELECT s.id 
-            FROM students s
-            JOIN enrollments e ON s.id = e.student_id
-            WHERE s.user_id = ?
+        if (oldRole === "customers") {
+          const customerDepsQuery = `
+            SELECT rc.id 
+            FROM rental_contracts rc
+            JOIN customers c ON rc.customer_id = c.id
+            WHERE c.user_id = ?
           `;
-          const studentDeps = await connection.promises.query(studentDepsQuery, [userId]);
-          if (studentDeps.first && studentDeps.first.length > 0) {
+          const customerDeps = await connection.promises.query(customerDepsQuery, [userId]);
+          if (customerDeps.first && customerDeps.first.length > 0) {
             await connection.promises.rollback();
-            req.flash("error", "Cannot change role. This student is enrolled in one or more classes. Please unenroll them first.");
+            req.flash("error", "Cannot change role. This customer has active or past rental contracts. Please resolve them first.");
             return res.redirect(`/users/${userId}/edit`);
           }
         }
@@ -180,11 +178,11 @@ router.post(
 
         // Delete from all old role-specific tables to be safe
         await connection.promises.query(
-          "DELETE FROM students WHERE user_id = ?",
+          "DELETE FROM customers WHERE user_id = ?",
           [userId]
         );
         await connection.promises.query(
-          "DELETE FROM teachers WHERE user_id = ?",
+          "DELETE FROM employees WHERE user_id = ?",
           [userId]
         );
         await connection.promises.query(
@@ -193,28 +191,20 @@ router.post(
         );
 
         // Insert into the new role-specific table
-        if (role === "student") {
+        if (role === "customers") {
           await connection.promises.query(
-            "INSERT INTO students (user_id) VALUES (?)",
+            "INSERT INTO customers (user_id) VALUES (?)",
             [userId]
           );
-        } else if (role === "teacher") {
+        } else if (role === "employees") {
           await connection.promises.query(
-            "INSERT INTO teachers (user_id, salary) VALUES (?, ?)",
-            [userId, salary || 0]
+            "INSERT INTO employees (user_id) VALUES (?)",
+            [userId]
           );
         } else if (role === "admin") {
           await connection.promises.query(
             "INSERT INTO admins (user_id) VALUES (?)",
             [userId]
-          );
-        }
-      } else {
-        // If role is teacher and hasn't changed, just update the salary
-        if (role === "teacher" && salary !== undefined) {
-          await connection.promises.query(
-            "UPDATE teachers SET salary = ? WHERE user_id = ?",
-            [salary, userId]
           );
         }
       }
@@ -285,40 +275,26 @@ router.delete(
       const userRole = userResult.first[0].role;
 
       // Check for dependencies based on role
-      if (userRole === "student") {
-        const studentDeps = await connection.promises.query(
-          `
-        SELECT 
-          (SELECT COUNT(*) FROM enrollments e JOIN students s ON e.student_id = s.id WHERE s.user_id = ?) as enrollment_count,
-          (SELECT COUNT(*) FROM Attempts a JOIN students s ON a.student_id = s.id WHERE s.user_id = ?) as attempt_count
-      `,
-          [userIdToDelete, userIdToDelete]
-        );
-
-        if (
-          studentDeps.first[0].enrollment_count > 0 ||
-          studentDeps.first[0].attempt_count > 0
-        ) {
-          req.flash(
-            "error",
-            "Cannot delete student with existing enrollments or exam attempts."
-          );
-          await connection.promises.rollback();
-          return res.redirect("/users");
-        }
-      } else if (userRole === "teacher") {
-        const teacherDeps = await connection.promises.query(
-          "SELECT COUNT(*) as class_count FROM classes c JOIN teachers t ON c.teacher_id = t.id WHERE t.user_id = ?",
+      if (userRole === "customers") {
+        const customerDeps = await connection.promises.query(
+          `SELECT COUNT(rc.id) as contract_count 
+           FROM rental_contracts rc
+           JOIN customers c ON rc.customer_id = c.id
+           WHERE c.user_id = ?`,
           [userIdToDelete]
         );
-        if (teacherDeps.first[0].class_count > 0) {
+
+        if (customerDeps.first[0].contract_count > 0) {
           req.flash(
             "error",
-            "Cannot delete teacher assigned to active classes."
+            "Cannot delete customer with existing rental contracts."
           );
           await connection.promises.rollback();
           return res.redirect("/users");
         }
+      } else if (userRole === "employees") {
+        // Currently, employees have no dependencies that would prevent deletion.
+        // This block can be expanded if, for example, employees get assigned to tasks.
       }
 
       // If no dependencies, proceed with deletion

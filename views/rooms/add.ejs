@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm Phòng</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .form-card {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .form-header p {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: inherit;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .required {
+            color: #dc3545;
+        }
+
+        .hint {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-submit {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-submit:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-cancel {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-cancel:hover {
+            background-color: #5a6268;
+        }
+
+        .message {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            animation: slideDown 0.3s ease;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-label {
+            margin: 0;
+            font-weight: normal;
+        }
+    </style>
+</head>
+<body>
+    <%- include('../shared/header.ejs') %>
+
+    <div class="container">
+        <div class="form-card">
+            <div class="form-header">
+                <h1>➕ Thêm Phòng Mới</h1>
+                <p>Nhập thông tin phòng cần thêm</p>
+            </div>
+
+            <% if (message) { %>
+                <div class="message error">
+                    <%= message %>
+                </div>
+            <% } %>
+
+            <form method="POST" action="/rooms/add">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="room_number">
+                            Số Phòng
+                            <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="room_number" 
+                            name="room_number" 
+                            placeholder="VD: P101, L201..."
+                            required
+                            maxlength="50"
+                        >
+                        <div class="hint">Số phòng phải là duy nhất</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="room_type">
+                            Loại Phòng
+                            <span class="required">*</span>
+                        </label>
+                        <select id="room_type" name="room_type" required>
+                            <option value="">-- Chọn loại phòng --</option>
+                            <option value="phòng tự học">🎓 Phòng Tự Học</option>
+                            <option value="phòng lab">💻 Phòng Lab</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="size_sqm">Diện Tích (m²)</label>
+                        <input 
+                            type="number" 
+                            id="size_sqm" 
+                            name="size_sqm"
+                            placeholder="VD: 25.5"
+                            step="0.01"
+                            min="0"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rent_price">
+                            Giá Thuê (VND)
+                            <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="number" 
+                            id="rent_price" 
+                            name="rent_price"
+                            placeholder="VD: 500000"
+                            required
+                            min="0"
+                            step="1000"
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Mô Tả</label>
+                    <textarea 
+                        id="description" 
+                        name="description"
+                        placeholder="VD: Phòng học nhóm nhỏ, có bảng trắng và máy chiếu..."
+                        maxlength="1000"
+                    ></textarea>
+                    <div class="hint">Mô tả chi tiết về phòng</div>
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input 
+                            type="checkbox" 
+                            id="is_available" 
+                            name="is_available"
+                            value="1"
+                            checked
+                        >
+                        <label for="is_available" class="checkbox-label">Phòng có sẵn cho thuê</label>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a href="/rooms/list" class="btn btn-cancel">← Quay Lại</a>
+                    <button type="submit" class="btn btn-submit">✓ Thêm Phòng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <%- include('../shared/footer.ejs') %>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const room_number = document.getElementById('room_number').value.trim();
+            const room_type = document.getElementById('room_type').value;
+            const rent_price = document.getElementById('rent_price').value;
+
+            if (!room_number) {
+                e.preventDefault();
+                alert('Vui lòng nhập số phòng');
+                return false;
+            }
+
+            if (!room_type) {
+                e.preventDefault();
+                alert('Vui lòng chọn loại phòng');
+                return false;
+            }
+
+            if (!rent_price || rent_price <= 0) {
+                e.preventDefault();
+                alert('Vui lòng nhập giá thuê hợp lệ');
+                return false;
+            }
+        });
+    </script>
+</body>
+</html>

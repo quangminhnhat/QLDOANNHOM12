@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Available Rooms</title>
+    <!-- You should link your main stylesheet here -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .room-card {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+      }
+      .room-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Assuming you have a standard header/navbar partial -->
+    <%- include('../partials/header', { user: user, page_name: page_name }) %>
+
+    <div class="container mt-4">
+      <h1 class="mb-4">Available Rooms for Rent</h1>
+
+      <% if (messages.error) { %>
+      <div class="alert alert-danger"><%= messages.error %></div>
+      <% } %>
+
+      <div class="row">
+        <% if (rooms && rooms.length > 0) { %> <% rooms.forEach(room => { %>
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card h-100 room-card">
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title"><%= room.room_number %></h5>
+              <h6 class="card-subtitle mb-2 text-muted"><%= room.room_type %></h6>
+              <p class="card-text"><%= room.description %></p>
+              <% if (room.furniture_list) { %>
+              <p class="card-text"><small><strong>Includes:</strong> <%= room.furniture_list %></small></p>
+              <% } %>
+              <div class="mt-auto">
+                <p class="card-text fs-5 fw-bold text-primary"><%= new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(room.rent_price) %></p>
+                <a href="/renting/new?room_id=<%= room.id %>" class="btn btn-primary">Rent Now</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <% }) %> <% } else { %>
+        <p>There are no available rooms at the moment. Please check back later.</p>
+        <% } %>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

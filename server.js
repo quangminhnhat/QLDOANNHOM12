@@ -37,7 +37,7 @@ const userRoutes = require("./routes/usersRoutes");
 const miscroutes = require("./routes/MiscRoute");
 const furnitureRoutes = require("./routes/furnitureRoute");
 const roomRoutes = require("./routes/RoomRoute");
-
+const RentingRoute = require("./routes/RentingRoute");
 
 // Essential middleware
 app.use(express.json());
@@ -111,6 +111,11 @@ app.use(userRoutes);
 app.use(miscroutes);
 app.use("/furniture", furnitureRoutes);
 app.use("/rooms", roomRoutes);
+app.use("/renting", RentingRoute);
+
+// Login routes
+
+
 
 app.post(
   "/login",

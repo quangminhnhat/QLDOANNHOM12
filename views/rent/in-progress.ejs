@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>In-Progress Rentals</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <%- include('../shared/header.ejs') %>
+
+
+    <div class="container mt-5">
+        <h1 class="mb-4">In-Progress Rentals</h1>
+
+        <% if (messages.success) { %>
+            <div class="alert alert-success"><%= messages.success %></div>
+        <% } %>
+        <% if (messages.error) { %>
+            <div class="alert alert-danger"><%= messages.error %></div>
+        <% } %>
+
+        <% if (rentals && rentals.length > 0) { %>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">Contract ID</th>
+                            <th scope="col">Customer</th>
+                            <th scope="col">Room</th>
+                            <th scope="col">Start Date</th>
+                            <th scope="col">End Date</th>
+                            <th scope="col">Total Rent</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% rentals.forEach(rental => { %>
+                            <tr>
+                                <td>#<%= rental.contract_id %></td>
+                                <td><%= rental.full_name %></td>
+                                <td><%= rental.room_number %></td>
+                                <td><%= new Date(rental.start_date).toLocaleDateString() %></td>
+                                <td><%= new Date(rental.end_date).toLocaleDateString() %></td>
+                                <td><%= new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(rental.total_rent) %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        <% } else { %>
+            <div class="text-center p-5 border rounded bg-light">
+                <h4>No Rentals In Progress</h4>
+                <p>There are currently no active rentals in progress.</p>
+            </div>
+        <% } %>
+    </div>
+
+</body>
+</html>

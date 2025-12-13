@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rent Room: <%= room.room_number %></title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .details-card {
+        border-left: 5px solid #198754;
+      }
+    </style>
+  </head>
+  <body>
+  <%- include('../shared/header.ejs') %>
+
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <h1 class="mb-4">Confirm Your Rental</h1>
+
+          <% if (messages.error) { %>
+          <div class="alert alert-danger"><%= messages.error %></div>
+          <% } %>
+          <% if (messages.success) { %>
+            <div class="alert alert-success"><%= messages.success %></div>
+          <% } %>
+
+          <div class="card details-card mb-4">
+            <div class="card-body">
+              <h3 class="card-title"><%= room.room_number %></h3>
+              <h5 class="card-subtitle mb-3 text-muted"><%= room.room_type %></h5>
+
+              <p class="card-text"><%= room.description %></p>
+
+              <ul class="list-group list-group-flush mb-3">
+                <li class="list-group-item">
+                  <strong>Price:</strong> 
+                  <span class="fs-5 text-primary fw-bold">
+                    <%= new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(room.rent_price) %>
+                  </span>
+                </li>
+                <% if (room.size_sqm) { %>
+                <li class="list-group-item">
+                  <strong>Size:</strong> <%= room.size_sqm %> m²
+                </li>
+                <% } %>
+                <% if (furniture && furniture.length > 0) { %>
+                <li class="list-group-item">
+                  <strong>Includes:</strong>
+                  <ul class="mt-2">
+                    <% furniture.forEach(item => { %>
+                      <li><%= item.name %> (Quantity: <%= item.quantity %>)</li>
+                    <% }) %>
+                  </ul>
+                </li>
+                <% } %>
+              </ul>
+            </div>
+          </div>
+
+          <h4 class="mb-3">Select Rental Period</h4>
+          <form action="/renting/create" method="POST">
+            <input type="hidden" name="room_id" value="<%= room.id %>" />
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="startDate" class="form-label">Start Date</label>
+                <input type="date" class="form-control" id="startDate" name="start_date" required />
+              </div>
+              <div class="col-md-6">
+                <label for="endDate" class="form-label">End Date</label>
+                <input type="date" class="form-control" id="endDate" name="end_date" required />
+              </div>
+            </div>
+
+            <div class="mt-4 bg-light p-3 rounded">
+              <h4>Total Rent</h4>
+              <p id="totalRentDisplay" class="fs-4 fw-bold text-success">Please select a start and end date.</p>
+              <small id="daysCount" class="text-muted"></small>
+            </div>
+
+            <button type="submit" class="btn btn-success btn-lg mt-4">Confirm & Proceed to Checkout</button>
+            <a href="/renting" class="btn btn-secondary mt-4">Cancel</a>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      const startDateInput = document.getElementById('startDate');
+      const endDateInput = document.getElementById('endDate');
+      const totalRentDisplay = document.getElementById('totalRentDisplay');
+      const daysCountDisplay = document.getElementById('daysCount');
+      const roomPrice = parseFloat('<%= room.rent_price %>');
+      const currencyFormatter = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' });
+
+      function calculateRent() {
+        const start = new Date(startDateInput.value);
+        const end = new Date(endDateInput.value);
+
+        if (!startDateInput.value || !endDateInput.value || start > end) {
+          totalRentDisplay.textContent = 'Invalid date range.';
+          daysCountDisplay.textContent = '';
+          return;
+        }
+
+        // Calculate the difference in time (milliseconds) and convert to days
+        // Add 1 to include both the start and end dates in the rental period
+        const timeDiff = end.getTime() - start.getTime();
+        const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1;
+
+        if (dayDiff > 0) {
+          const totalCost = dayDiff * roomPrice;
+          totalRentDisplay.textContent = currencyFormatter.format(totalCost);
+          daysCountDisplay.textContent = `Based on ${dayDiff} day(s) at ${currencyFormatter.format(roomPrice)}/day.`;
+        } else {
+          totalRentDisplay.textContent = 'Please select a valid date range.';
+          daysCountDisplay.textContent = '';
+        }
+      }
+
+      // Set minimum date for inputs to today
+      const today = new Date().toISOString().split('T')[0];
+      startDateInput.setAttribute('min', today);
+      endDateInput.setAttribute('min', today);
+
+      startDateInput.addEventListener('change', () => {
+        // Ensure end date is not before start date
+        if (endDateInput.value && startDateInput.value > endDateInput.value) {
+          endDateInput.value = startDateInput.value;
+        }
+        endDateInput.setAttribute('min', startDateInput.value);
+        calculateRent();
+      });
+      endDateInput.addEventListener('change', calculateRent);
+    </script>
+  </body>
+</html>

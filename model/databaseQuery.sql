@@ -59,7 +59,6 @@ CREATE TABLE rooms
     size_sqm DECIMAL(10, 2) NULL, -- e.g., size in square meters
     description NVARCHAR(MAX) NULL,
     rent_price DECIMAL(10, 2) NOT NULL,
-    is_available BIT DEFAULT 1 NOT NULL, -- 1 for available, 0 for rented
     created_at DATETIME DEFAULT GETDATE() NOT NULL,
     updated_at DATETIME DEFAULT GETDATE() NOT NULL,
     CONSTRAINT UQ_rooms_room_number UNIQUE (room_number),
@@ -182,10 +181,10 @@ INSERT INTO customers (user_id) VALUES (3);
 INSERT INTO customers (user_id) VALUES (4);
 
 -- Insert rooms
-INSERT INTO rooms (room_number, room_type, size_sqm, description, rent_price, is_available) VALUES
-(N'P101', N'phòng tự học', 25.5, N'Phòng học nhóm nhỏ, có bảng trắng.', 500000.00, 1),
-(N'L201', N'phòng lab', 40.0, N'Phòng lab với 10 máy tính cấu hình cao.', 1200000.00, 1),
-(N'P102', N'phòng tự học', 30.0, N'Phòng tự học lớn, có máy chiếu.', 750000.00, 0);
+INSERT INTO rooms (room_number, room_type, size_sqm, description, rent_price) VALUES
+(N'P101', N'phòng tự học', 25.5, N'Phòng học nhóm nhỏ, có bảng trắng.', 50000.00),
+(N'L201', N'phòng lab', 40.0, N'Phòng lab với 10 máy tính cấu hình cao.', 120000.00),
+(N'P102', N'phòng tự học', 30.0, N'Phòng tự học lớn, có máy chiếu.', 75000.00);
 
 -- Insert furniture
 INSERT INTO furniture (name, description) VALUES
@@ -212,13 +211,20 @@ INSERT INTO room_furniture (room_id, furniture_id, quantity) VALUES
 (3, 4, 1); -- 1 Máy chiếu
 
 -- Insert rental contracts
--- Assuming customer ID for 'Khách Hàng A' is 1 and room P102 ID is 3
+-- Assuming customer ID for 'Khách Hàng A' is 1, 'Khách Hàng B' is 2
+-- Room P102 (ID 3), Room P101 (ID 1)
+
+-- A completed contract from the past for Customer A
 INSERT INTO rental_contracts (customer_id, room_id, start_date, end_date, total_rent, status) VALUES
-(1, 3, '2024-05-01', '2024-05-31', 750000.00, 'active');
+(1, 3, '2024-04-01', '2024-04-30', 750000.00, 'completed');
+
+-- An active, ongoing contract for Customer B
+INSERT INTO rental_contracts (customer_id, room_id, start_date, end_date, total_rent, status) VALUES
+(2, 1, GETDATE(), DATEADD(day, 30, GETDATE()), 50000.00 * 31, 'active');
 
 -- Insert payments
--- Assuming the rental contract ID created above is 1
+-- Assuming the rental contract IDs created above are 1 and 2
 INSERT INTO payments (rental_contract_id, amount, payment_date, payment_method, status) VALUES
-(1, 750000.00, '2024-05-01T10:00:00', N'Chuyển khoản', 'completed');
+(1, 750000.00, '2024-04-01T10:00:00', N'Credit Card', 'completed'),
+(2, 50000.00 * 31, GETDATE(), N'Cash', 'completed');
 
-SELECT * FROM furniture ORDER BY id DESC

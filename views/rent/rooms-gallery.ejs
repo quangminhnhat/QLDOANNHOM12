@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Rooms</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+        .room-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+        .room-card:hover {
+            transform: translateY(-5px);
+        }
+        .room-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .room-card-content {
+            padding: 15px;
+        }
+        .room-card-content h3 {
+            margin-top: 0;
+        }
+        .room-card-content .price {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <h1>Available Rooms</h1>
+    <div class="gallery-container">
+        <% rooms.forEach(room => { %>
+            <div class="room-card">
+                <img src="<%= room.image_url || '/images/default-room.jpg' %>" alt="Room <%= room.room_number %>">
+                <div class="room-card-content">
+                    <h3>Room: <%= room.room_number %></h3>
+                    <p><%= room.description %></p>
+                    <p class="price">$<%= room.price %>/month</p>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+</body>
+</html>

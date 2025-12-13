@@ -166,7 +166,9 @@ app.post(
 
 
 app.get("/login", checkNotAuthenticated, (req, res) => {
-  res.render("login.ejs");
+  res.render("login.ejs", {
+    user: req.user,
+  });
 });
 
 

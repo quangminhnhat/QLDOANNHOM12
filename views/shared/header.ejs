@@ -26,8 +26,19 @@
                         <a class="nav-link" href="/">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/rooms">Rooms</a>
+                        <a class="nav-link" href="/rent/store">Store</a>
                     </li>
+                    <% if (user && user.role === 'customer') { %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/rent/my-rentals">My Rentals</a>
+                    </li>
+                    <% } %>
+                    
+                    <% if (user && (user.role === 'admin' || user.role === 'employee')) { %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/rooms/list">Rooms</a>
+                    </li>
+                    <% } %>
                     <% if (user && user.role === 'admin') { %>
                     <li class="nav-item">
                         <a class="nav-link" href="/admin/dashboard">Dashboard</a>

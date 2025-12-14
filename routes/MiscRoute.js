@@ -46,10 +46,34 @@ router.get("/download/:id", checkAuthenticated, async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    
-    res.render("index.ejs", { user: req.user});
+    // This query fetches all available rooms and aggregates their furniture into a single string.
+    // STRING_AGG is available in SQL Server 2017 and later.
+    const query = `
+      SELECT
+        r.id,
+        r.room_number,
+        r.room_type,
+        r.description,
+        r.rent_price,
+        (
+          SELECT STRING_AGG(CONCAT(f.name, ' (', rf.quantity, ')'), ', ')
+          FROM room_furniture rf
+          JOIN furniture f ON f.id = rf.furniture_id
+          WHERE rf.room_id = r.id
+        ) AS furniture_list
+      FROM rooms r
+      ORDER BY r.room_number;
+    `;
+
+    const rooms = await executeQuery(query);
+
+    res.render("index.ejs", {
+      user: req.user, // Make sure user is passed
+      rooms: rooms,
+      page_name: "rooms",
+    });
   } catch (error) {
-    console.error("Error loading homepage courses:", error);
+    console.error("Error loading homepage room:", error);
     res.render("index.ejs", { user: req.user });
   }
 });

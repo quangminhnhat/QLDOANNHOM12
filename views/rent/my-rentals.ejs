@@ -1,59 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Rentals</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-<%- include('../shared/header.ejs') %>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet"
+        href="https://demos.creative-tim.com/notus-js/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css">
+    <style>
+        .modern-container {
+            max-width: 1200px;
+            margin: 48px auto;
+            padding: 2.5rem 2rem;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(44, 62, 80, 0.10);
+            border: 1px solid #e3e6ed;
+            animation: fadeIn 0.5s;
+        }
 
-    <div class="container mt-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1>My Rentals</h1>
-            <a href="/renting" class="btn btn-primary">Book a New Room</a>
+        .modern-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2375D8;
+            letter-spacing: 1px;
+        }
+
+        .rental-list-item {
+            background: #fff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.06);
+            border: 1px solid #e3e6ed;
+            transition: box-shadow 0.2s;
+        }
+        .rental-list-item:hover {
+            box-shadow: 0 4px 12px rgba(44,62,80,0.1);
+        }
+
+        .rental-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .rental-room {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        .rental-status {
+            padding: 0.4rem 0.8rem;
+            border-radius: 9999px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #fff;
+        }
+        
+        .status-warning { background-color: #f59e0b; }
+        .status-success { background-color: #10b981; }
+        .status-info    { background-color: #3b82f6; }
+        .status-secondary { background-color: #6b7280; }
+
+
+        .modern-btn-primary {
+            background: linear-gradient(90deg, #2375D8 0%, #0c9083 100%);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(36,117,216,0.10);
+            transition: background 0.2s, transform 0.15s;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .modern-btn-primary:hover {
+            background: linear-gradient(90deg, #0c9083 0%, #2375D8 100%);
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(18px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('../shared/header.ejs') %>
+
+    <div class="modern-container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h1 class="modern-title"><i class="fas fa-key"></i> My Rentals</h1>
+            <a href="/renting" class="modern-btn-primary">Book a New Room</a>
         </div>
 
+
         <% if (messages.success) { %>
-            <div class="alert alert-success"><%= messages.success %></div>
+        <div class="alert alert-success"><%= messages.success %></div>
         <% } %>
         <% if (messages.error) { %>
-            <div class="alert alert-danger"><%= messages.error %></div>
+        <div class="alert alert-danger"><%= messages.error %></div>
         <% } %>
 
         <% if (rentals && rentals.length > 0) { %>
-            <div class="list-group">
-                <% rentals.forEach(rental => { %>
-                    <div class="list-group-item list-group-item-action flex-column align-items-start mb-3 border rounded">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">Room: <%= rental.room_number %></h5>
-                            <span class="badge bg-<%= rental.displayStatus.class %> rounded-pill fs-6">
-                                <%= rental.displayStatus.text %>
-                            </span>
-                        </div>
-                        <p class="mb-1"><%= rental.description %></p>
-                        <ul class="list-unstyled mt-2">
-                            <li>
-                                <strong>Period:</strong> 
-                                <%= new Date(rental.start_date).toLocaleDateString() %> - <%= new Date(rental.end_date).toLocaleDateString() %>
-                            </li>
-                            <li>
-                                <strong>Total:</strong> 
-                                <%= new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(rental.total_rent) %>
-                            </li>
-                        </ul>
-                    </div>
-                <% }) %>
+            <% rentals.forEach(rental => { %>
+            <div class="rental-list-item">
+                <div class="rental-header">
+                    <h5 class="rental-room">Room: <%= rental.room_number %></h5>
+                    <span class="rental-status status-<%= rental.displayStatus.class %>">
+                        <%= rental.displayStatus.text %>
+                    </span>
+                </div>
+                <p><%= rental.description %></p>
+                <ul class="list-unstyled mt-2">
+                    <li>
+                        <strong>Period:</strong>
+                        <%= new Date(rental.start_date).toLocaleDateString() %> - <%= new Date(rental.end_date).toLocaleDateString() %>
+                    </li>
+                    <li>
+                        <strong>Total:</strong>
+                        <%= new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(rental.total_rent) %>
+                    </li>
+                </ul>
             </div>
+            <% }) %>
         <% } else { %>
             <div class="text-center p-5 border rounded bg-light">
                 <h4>You have no upcoming rentals.</h4>
                 <p>Why not book one today?</p>
-                <a href="/renting" class="btn btn-success">Browse Available Rooms</a>
+                <a href="/renting" class="modern-btn-primary" style="background: #10b981;">Browse Available Rooms</a>
             </div>
         <% } %>
     </div>
+    
+    <%- include('../shared/footer.ejs') %>
 
 </body>
+
 </html>

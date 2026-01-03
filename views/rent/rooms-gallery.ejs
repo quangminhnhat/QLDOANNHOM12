@@ -4,19 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Available Rooms</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
+        .modern-container {
+            max-width: 1200px;
+            margin: 48px auto;
+            padding: 2.5rem;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(44, 62, 80, 0.10);
+            animation: fadeIn 0.5s;
         }
+
+        .modern-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2375D8;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
         .gallery-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
-            max-width: 1200px;
-            margin: auto;
         }
         .room-card {
             background-color: white;
@@ -44,21 +57,32 @@
             font-weight: bold;
             color: #28a745;
         }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(18px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
-    <h1>Available Rooms</h1>
-    <div class="gallery-container">
-        <% rooms.forEach(room => { %>
-            <div class="room-card">
-                <img src="<%= room.image_url || '/images/default-room.jpg' %>" alt="Room <%= room.room_number %>">
-                <div class="room-card-content">
-                    <h3>Room: <%= room.room_number %></h3>
-                    <p><%= room.description %></p>
-                    <p class="price">$<%= room.price %>/month</p>
+    <%- include('../shared/header.ejs') %>
+
+    <div class="modern-container">
+        <h1 class="modern-title">Available Rooms</h1>
+        <div class="gallery-container">
+            <% rooms.forEach(room => { %>
+                <div class="room-card">
+                    <img src="<%= room.image_url || '/images/default-room.jpg' %>" alt="Room <%= room.room_number %>">
+                    <div class="room-card-content">
+                        <h3>Room: <%= room.room_number %></h3>
+                        <p><%= room.description %></p>
+                        <p class="price">$<%= room.price %>/month</p>
+                    </div>
                 </div>
-            </div>
-        <% }) %>
+            <% }) %>
+        </div>
     </div>
+    
+    <%- include('../shared/footer.ejs') %>
 </body>
 </html>

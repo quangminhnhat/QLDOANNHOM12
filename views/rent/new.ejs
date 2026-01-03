@@ -1,142 +1,213 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Rent Room: <%= room.room_number %></title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
-      .details-card {
-        border-left: 5px solid #198754;
-      }
+        .modern-container {
+            max-width: 1000px;
+            margin: 48px auto;
+            padding: 2.5rem;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(44, 62, 80, 0.10);
+            animation: fadeIn 0.5s;
+            
+        }
+
+        .modern-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2375D8;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .modern-form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+
+        .modern-btn-primary {
+            background: linear-gradient(90deg, #2375D8 0%, #0c9083 100%);
+            color: #fff;
+            font-weight: 700;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .modern-btn-secondary {
+            background-color: #e2e8f0;
+            color: #4a5568;
+            font-weight: 600;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            text-decoration: none;
+        }
+        
+        .room-details-card {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 2rem;
+            height: 100%;
+        }
+
+        .furniture-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .furniture-item {
+            background: #e6f0fa;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(18px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
-  </head>
-  <body>
-  <%- include('../shared/header.ejs') %>
+</head>
 
-    <div class="container mt-5">
-      <div class="row justify-content-center">
-        <div class="col-lg-8">
-          <h1 class="mb-4">Confirm Your Rental</h1>
+<body>
+    <%- include('../shared/header.ejs') %>
 
-          <% if (messages.error) { %>
-          <div class="alert alert-danger"><%= messages.error %></div>
-          <% } %>
-          <% if (messages.success) { %>
-            <div class="alert alert-success"><%= messages.success %></div>
-          <% } %>
+    <div class="modern-container">
+        <h1 class="modern-title">Confirm Your Rental</h1>
 
-          <div class="card details-card mb-4">
-            <div class="card-body">
-              <h3 class="card-title"><%= room.room_number %></h3>
-              <h5 class="card-subtitle mb-3 text-muted"><%= room.room_type %></h5>
+        <% if (messages.error) { %>
+        <div class="alert alert-danger"><%= messages.error %></div>
+        <% } %>
+        <% if (messages.success) { %>
+        <div class="alert alert-success"><%= messages.success %></div>
+        <% } %>
 
-              <p class="card-text"><%= room.description %></p>
-
-              <ul class="list-group list-group-flush mb-3">
-                <li class="list-group-item">
-                  <strong>Price:</strong> 
-                  <span class="fs-5 text-primary fw-bold">
-                    <%= new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(room.rent_price) %>
-                  </span>
-                </li>
-                <% if (room.size_sqm) { %>
-                <li class="list-group-item">
-                  <strong>Size:</strong> <%= room.size_sqm %> m²
-                </li>
-                <% } %>
-                <% if (furniture && furniture.length > 0) { %>
-                <li class="list-group-item">
-                  <strong>Includes:</strong>
-                  <ul class="mt-2">
-                    <% furniture.forEach(item => { %>
-                      <li><%= item.name %> (Quantity: <%= item.quantity %>)</li>
-                    <% }) %>
-                  </ul>
-                </li>
-                <% } %>
-              </ul>
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="room-details-card">
+                    <h3><%= room.room_number %></h3>
+                    <h5 class="text-muted"><%= room.room_type %></h5>
+                    <p><%= room.description %></p>
+                    <hr>
+                    <p><strong>Price:</strong> <span class="text-primary fw-bold"><%= new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(room.rent_price) %></span></p>
+                    <% if (room.size_sqm) { %>
+                    <p><strong>Size:</strong> <%= room.size_sqm %> m²</p>
+                    <% } %>
+                    <% if (furniture && furniture.length > 0) { %>
+                    <p><strong>Includes:</strong></p>
+                    <div class="furniture-grid">
+                        <% furniture.forEach(item => { %>
+                        <div class="furniture-item">
+                            <span><%= item.name %></span>
+                            <span class="badge bg-primary"><%= item.quantity %></span>
+                        </div>
+                        <% }) %>
+                    </div>
+                    <% } %>
+                </div>
             </div>
-          </div>
+            <div class="col-lg-6">
+                <h4>Select Rental Period</h4>
+                <form action="/renting/create" method="POST">
+                    <input type="hidden" name="room_id" value="<%= room.id %>" />
+                    <div class="mb-3">
+                        <label for="startDate" class="form-label">Start Date</label>
+                        <input type="date" class="modern-form-control" id="startDate" name="start_date" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="endDate" class="form-label">End Date</label>
+                        <input type="date" class="modern-form-control" id="endDate" name="end_date" required />
+                    </div>
 
-          <h4 class="mb-3">Select Rental Period</h4>
-          <form action="/renting/create" method="POST">
-            <input type="hidden" name="room_id" value="<%= room.id %>" />
-            <div class="row g-3">
-              <div class="col-md-6">
-                <label for="startDate" class="form-label">Start Date</label>
-                <input type="date" class="form-control" id="startDate" name="start_date" required />
-              </div>
-              <div class="col-md-6">
-                <label for="endDate" class="form-label">End Date</label>
-                <input type="date" class="form-control" id="endDate" name="end_date" required />
-              </div>
+                    <div class="mt-4 bg-light p-3 rounded">
+                        <h4>Total Rent</h4>
+                        <p id="totalRentDisplay" class="fs-4 fw-bold text-success">Please select a start and end date.</p>
+                        <small id="daysCount" class="text-muted"></small>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-6">
+                            <a href="/renting" class="modern-btn-secondary">Cancel</a>
+                        </div>
+                        <div class="col-6">
+                            <button type="submit" class="modern-btn-primary">Confirm & Proceed to Checkout</button>
+                        </div>
+                    </div>
+                </form>
             </div>
-
-            <div class="mt-4 bg-light p-3 rounded">
-              <h4>Total Rent</h4>
-              <p id="totalRentDisplay" class="fs-4 fw-bold text-success">Please select a start and end date.</p>
-              <small id="daysCount" class="text-muted"></small>
-            </div>
-
-            <button type="submit" class="btn btn-success btn-lg mt-4">Confirm & Proceed to Checkout</button>
-            <a href="/renting" class="btn btn-secondary mt-4">Cancel</a>
-          </form>
         </div>
-      </div>
     </div>
+    
+    <%- include('../shared/footer.ejs') %>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-      const startDateInput = document.getElementById('startDate');
-      const endDateInput = document.getElementById('endDate');
-      const totalRentDisplay = document.getElementById('totalRentDisplay');
-      const daysCountDisplay = document.getElementById('daysCount');
-      const roomPrice = parseFloat('<%= room.rent_price %>');
-      const currencyFormatter = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' });
+        // Script from original file
+        const startDateInput = document.getElementById('startDate');
+        const endDateInput = document.getElementById('endDate');
+        const totalRentDisplay = document.getElementById('totalRentDisplay');
+        const daysCountDisplay = document.getElementById('daysCount');
+        const roomPrice = parseFloat('<%= room.rent_price %>');
+        const currencyFormatter = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' });
 
-      function calculateRent() {
-        const start = new Date(startDateInput.value);
-        const end = new Date(endDateInput.value);
+        function calculateRent() {
+            const start = new Date(startDateInput.value);
+            const end = new Date(endDateInput.value);
 
-        if (!startDateInput.value || !endDateInput.value || start > end) {
-          totalRentDisplay.textContent = 'Invalid date range.';
-          daysCountDisplay.textContent = '';
-          return;
+            if (!startDateInput.value || !endDateInput.value || start > end) {
+                totalRentDisplay.textContent = 'Invalid date range.';
+                daysCountDisplay.textContent = '';
+                return;
+            }
+
+            const timeDiff = end.getTime() - start.getTime();
+            const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1;
+
+            if (dayDiff > 0) {
+                const totalCost = dayDiff * roomPrice;
+                totalRentDisplay.textContent = currencyFormatter.format(totalCost);
+                daysCountDisplay.textContent = `Based on ${dayDiff} day(s) at ${currencyFormatter.format(roomPrice)}/day.`;
+            } else {
+                totalRentDisplay.textContent = 'Please select a valid date range.';
+                daysCountDisplay.textContent = '';
+            }
         }
 
-        // Calculate the difference in time (milliseconds) and convert to days
-        // Add 1 to include both the start and end dates in the rental period
-        const timeDiff = end.getTime() - start.getTime();
-        const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1;
+        const today = new Date().toISOString().split('T')[0];
+        startDateInput.setAttribute('min', today);
+        endDateInput.setAttribute('min', today);
 
-        if (dayDiff > 0) {
-          const totalCost = dayDiff * roomPrice;
-          totalRentDisplay.textContent = currencyFormatter.format(totalCost);
-          daysCountDisplay.textContent = `Based on ${dayDiff} day(s) at ${currencyFormatter.format(roomPrice)}/day.`;
-        } else {
-          totalRentDisplay.textContent = 'Please select a valid date range.';
-          daysCountDisplay.textContent = '';
-        }
-      }
-
-      // Set minimum date for inputs to today
-      const today = new Date().toISOString().split('T')[0];
-      startDateInput.setAttribute('min', today);
-      endDateInput.setAttribute('min', today);
-
-      startDateInput.addEventListener('change', () => {
-        // Ensure end date is not before start date
-        if (endDateInput.value && startDateInput.value > endDateInput.value) {
-          endDateInput.value = startDateInput.value;
-        }
-        endDateInput.setAttribute('min', startDateInput.value);
-        calculateRent();
-      });
-      endDateInput.addEventListener('change', calculateRent);
+        startDateInput.addEventListener('change', () => {
+            if (endDateInput.value && startDateInput.value > endDateInput.value) {
+                endDateInput.value = startDateInput.value;
+            }
+            endDateInput.setAttribute('min', startDateInput.value);
+            calculateRent();
+        });
+        endDateInput.addEventListener('change', calculateRent);
     </script>
-  </body>
+</body>
+
 </html>

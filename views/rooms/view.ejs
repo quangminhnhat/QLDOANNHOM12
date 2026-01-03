@@ -1,464 +1,152 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi Tiết Phòng</title>
+    <title>Room Details</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f5f5;
-            padding: 20px;
-        }
-
-        .container {
+        .modern-container {
             max-width: 1000px;
-            margin: 0 auto;
+            margin: 48px auto;
+            padding: 2.5rem;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(44, 62, 80, 0.10);
+            animation: fadeIn 0.5s;
         }
 
-        .breadcrumb {
-            margin-bottom: 20px;
-            background: white;
-            padding: 15px 20px;
-            border-radius: 8px;
-            font-size: 14px;
+        .modern-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2375D8;
+            margin-bottom: 2rem;
         }
 
-        .breadcrumb a {
-            color: #007bff;
-            text-decoration: none;
+        .modern-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f7fafc;
+            border-radius: 10px;
         }
-
-        .breadcrumb a:hover {
-            text-decoration: underline;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .header-title h1 {
-            color: #333;
-            font-size: 32px;
-            margin-bottom: 5px;
-        }
-
-        .header-title p {
-            color: #999;
-            font-size: 14px;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
-
-        .btn-warning {
-            background-color: #ffc107;
-            color: #333;
-        }
-
-        .btn-warning:hover {
-            background-color: #e0a800;
-        }
-
-        .btn-secondary {
-            background-color: #6c757d;
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background-color: #5a6268;
-        }
-
-        .content-grid {
+        
+        .info-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
         }
-
-        .info-card {
-            background: white;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .info-card h2 {
-            color: #333;
-            font-size: 18px;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #f0f0f0;
-        }
-
-        .info-row {
+        
+        .info-item {
             display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .info-row:last-child {
-            border-bottom: none;
+            flex-direction: column;
         }
 
         .info-label {
-            font-weight: 600;
-            color: #666;
-            font-size: 14px;
+            font-size: 0.875rem;
+            color: #718096;
         }
 
         .info-value {
-            color: #333;
-            font-weight: 500;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
+            font-size: 1.1rem;
+            color: #2d3748;
             font-weight: 600;
         }
 
-        .badge-available {
-            background-color: #d4edda;
-            color: #155724;
+        .modern-btn-primary {
+            background: linear-gradient(90deg, #2375D8 0%, #0c9083 100%);
+            color: #fff;
+            font-weight: 700;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            text-decoration: none;
         }
-
-        .badge-rented {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-
-        .badge-study {
-            background-color: #e7f3ff;
-            color: #004085;
-        }
-
-        .badge-lab {
-            background-color: #fff3cd;
-            color: #856404;
-        }
-
-        .furniture-section {
-            grid-column: 1 / -1;
-        }
-
-        .furniture-container {
-            background: white;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .furniture-container h2 {
-            color: #333;
-            font-size: 18px;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #f0f0f0;
-        }
-
-        .furniture-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 15px;
-        }
-
-        .furniture-item {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            padding: 15px;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-        }
-
-        .furniture-item:hover {
-            background: #e7f3ff;
-            border-color: #007bff;
-        }
-
-        .furniture-name {
+        
+        .modern-btn-secondary {
+            background-color: #e2e8f0;
+            color: #4a5568;
             font-weight: 600;
-            color: #333;
-            font-size: 15px;
-            margin-bottom: 8px;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            text-decoration: none;
         }
 
-        .furniture-quantity {
-            color: #666;
-            font-size: 13px;
-            margin-bottom: 8px;
-        }
-
-        .furniture-desc {
-            color: #999;
-            font-size: 12px;
-            line-height: 1.4;
-        }
-
-        .empty-furniture {
-            text-align: center;
-            padding: 40px 20px;
-            color: #999;
-        }
-
-        .empty-icon {
-            font-size: 36px;
-            margin-bottom: 10px;
-        }
-
-        .description-section {
-            background: white;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            grid-column: 1 / -1;
-            margin-bottom: 30px;
-        }
-
-        .description-section h2 {
-            color: #333;
-            font-size: 18px;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #f0f0f0;
-        }
-
-        .description-text {
-            color: #666;
-            line-height: 1.6;
-            font-size: 14px;
-        }
-
-        .price-highlight {
-            color: #28a745;
-            font-weight: 600;
-            font-size: 24px;
-            margin-top: 10px;
-        }
-
-        .status-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .status-item {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 6px;
-            text-align: center;
-        }
-
-        .status-label {
-            font-size: 12px;
-            color: #999;
-            margin-bottom: 5px;
-        }
-
-        .status-value {
-            font-size: 16px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        @media (max-width: 768px) {
-            .content-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-
-            .btn-group {
-                width: 100%;
-            }
-
-            .btn-group .btn {
-                flex: 1;
-            }
-
-            .furniture-list {
-                grid-template-columns: 1fr;
-            }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(18px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
+
 <body>
     <%- include('../shared/header.ejs') %>
 
-    <div class="container">
-        <div class="breadcrumb">
-            <a href="/rooms/list">← Quay lại danh sách phòng</a>
-        </div>
-
-        <div class="header">
-            <div class="header-title">
-                <h1>🏠 <%= room.room_number %></h1>
-                <p>Chi tiết phòng</p>
-            </div>
-            <div class="btn-group">
-                <a href="/rooms/edit/<%= room.id %>" class="btn btn-warning">✏️ Sửa</a>
-                <a href="/rooms/list" class="btn btn-secondary">← Quay Lại</a>
+    <div class="modern-container">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h1 class="modern-title">🏠 <%= room.room_number %></h1>
+            <div>
+                <a href="/rooms/edit/<%= room.id %>" class="modern-btn-primary">✏️ Edit</a>
+                <a href="/rooms/list" class="modern-btn-secondary">← Back to List</a>
             </div>
         </div>
 
-        <div class="content-grid">
-            <div class="info-card">
-                <h2>ℹ️ Thông Tin Cơ Bản</h2>
-                
-                <div class="info-row">
-                    <span class="info-label">ID Phòng:</span>
-                    <span class="info-value"><strong><%= room.id %></strong></span>
+        <div class="modern-section">
+            <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">ℹ️ Room Information</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">ID</span>
+                    <span class="info-value"><%= room.id %></span>
                 </div>
-
-                <div class="info-row">
-                    <span class="info-label">Số Phòng:</span>
-                    <span class="info-value"><strong><%= room.room_number %></strong></span>
+                <div class="info-item">
+                    <span class="info-label">Room Number</span>
+                    <span class="info-value"><%= room.room_number %></span>
                 </div>
-
-                <div class="info-row">
-                    <span class="info-label">Loại Phòng:</span>
-                    <span class="info-value">
-                        <% if (room.room_type === 'phòng tự học') { %>
-                            <span class="badge badge-study">🎓 Phòng Tự Học</span>
-                        <% } else { %>
-                            <span class="badge badge-lab">💻 Phòng Lab</span>
-                        <% } %>
-                    </span>
+                <div class="info-item">
+                    <span class="info-label">Type</span>
+                    <span class="info-value"><%= room.room_type %></span>
                 </div>
-
-                <div class="info-row">
-                    <span class="info-label">Diện Tích:</span>
-                    <span class="info-value"><%= room.size_sqm ? room.size_sqm + ' m²' : 'Không có' %></span>
+                <div class="info-item">
+                    <span class="info-label">Size</span>
+                    <span class="info-value"><%= room.size_sqm ? room.size_sqm + ' m²' : 'N/A' %></span>
                 </div>
-
-                <div class="info-row">
-                    <span class="info-label">Trạng Thái:</span>
-                    <span class="info-value">
-                        <span class="badge badge-available">✓ Còn Trống</span>
-                    </span>
+                <div class="info-item">
+                    <span class="info-label">Rent Price</span>
+                    <span class="info-value" style="color: #28a745;"><%= parseFloat(room.rent_price).toLocaleString('vi-VN') %> VND</span>
                 </div>
             </div>
+            <% if (room.description) { %>
+                <div style="margin-top: 1.5rem;">
+                    <span class="info-label">Description</span>
+                    <p><%= room.description %></p>
+                </div>
+            <% } %>
+        </div>
 
-            <div class="info-card">
-                <h2>💰 Thông Tin Giá</h2>
-                
-                <div class="status-grid">
-                    <div class="status-item">
-                        <div class="status-label">Giá Thuê (Tháng)</div>
-                        <div class="status-value price-highlight">
-                            <%= parseFloat(room.rent_price).toLocaleString('vi-VN') %> VND
+        <div class="modern-section">
+            <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">🪑 Furniture</h2>
+            <% if (furnitureList && furnitureList.length > 0) { %>
+                <div class="info-grid">
+                    <% furnitureList.forEach(item => { %>
+                        <div class="info-item" style="background: #f0f4f8; padding: 1rem; border-radius: 8px;">
+                            <span class="info-value">📦 <%= item.name %></span>
+                            <span class="info-label">Quantity: <%= item.quantity %></span>
+                            <% if (item.description) { %>
+                                <p style="font-size: 0.8rem; color: #666;"><%= item.description %></p>
+                            <% } %>
                         </div>
-                    </div>
-                    
-                    <div class="status-item">
-                        <div class="status-label">Giá Thuê (Ngày)</div>
-                        <div class="status-value">
-                            <%= Math.round(parseFloat(room.rent_price) / 30).toLocaleString('vi-VN') %> VND
-                        </div>
-                    </div>
+                    <% }); %>
                 </div>
-
-                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #dee2e6;">
-                    <div class="info-row">
-                        <span class="info-label">Ngày Tạo:</span>
-                        <span class="info-value"><%= new Date(room.created_at).toLocaleDateString('vi-VN') %></span>
-                    </div>
-
-                    <div class="info-row">
-                        <span class="info-label">Cập Nhật Lần Cuối:</span>
-                        <span class="info-value"><%= new Date(room.updated_at).toLocaleDateString('vi-VN') %></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <% if (room.description) { %>
-            <div class="description-section">
-                <h2>📝 Mô Tả</h2>
-                <div class="description-text">
-                    <%= room.description %>
-                </div>
-            </div>
-        <% } %>
-
-        <div class="furniture-section">
-            <div class="furniture-container">
-                <h2>🪑 Đồ Dùng Trong Phòng</h2>
-                
-                <% if (furnitureList && furnitureList.length > 0) { %>
-                    <div class="furniture-list">
-                        <% furnitureList.forEach(item => { %>
-                            <div class="furniture-item">
-                                <div class="furniture-name">📦 <%= item.name %></div>
-                                <div class="furniture-quantity">
-                                    <strong><%= item.quantity %></strong> cái
-                                </div>
-                                <% if (item.description) { %>
-                                    <div class="furniture-desc">
-                                        <%= item.description %>
-                                    </div>
-                                <% } %>
-                            </div>
-                        <% }); %>
-                    </div>
-                <% } else { %>
-                    <div class="empty-furniture">
-                        <div class="empty-icon">📭</div>
-                        <p>Phòng này chưa có đồ dùng nào được gán</p>
-                    </div>
-                <% } %>
-            </div>
+            <% } else { %>
+                <p>No furniture assigned to this room.</p>
+            <% } %>
         </div>
     </div>
 
     <%- include('../shared/footer.ejs') %>
-
-    <script>
-        // Add any interactive features here if needed
-    </script>
 </body>
+
 </html>

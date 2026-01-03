@@ -1,309 +1,136 @@
 <!DOCTYPE html>
+<html>
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trang Chủ</title>
+    <title>User Management</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css">
-    <!-- link swiper-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link rel="stylesheet"
         href="https://demos.creative-tim.com/notus-js/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css">
-    <!-- DataTables CSS -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
     <link rel="stylesheet" type="text/css"
         href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
     <style>
-        html, body {
-            height: 100%;
-            min-height: 100%;
-            margin: 0;
-            padding: 0;
-        }
-
-        .main-content {
-            flex: 1 0 auto;
-            padding: 2rem 0;
-        }
-        .modern-table-container {
-            max-width: 1100px;
-            margin: 0 auto;
+        .modern-container {
+            max-width: 1200px;
+            margin: 48px auto;
+            padding: 2.5rem;
             background: #fff;
             border-radius: 18px;
-            box-shadow: 0 4px 24px rgba(44,62,80,0.10);
-            border: 1px solid #e3e6ed;
-            padding: 2.5rem 2rem 2rem 2rem;
+            box-shadow: 0 4px 24px rgba(44, 62, 80, 0.10);
             animation: fadeIn 0.5s;
         }
-        .modern-table-title {
+
+        .modern-title {
             font-size: 2rem;
             font-weight: 700;
             color: #2375D8;
-            text-align: center;
             margin-bottom: 2rem;
-            letter-spacing: 1px;
         }
-        #userTable {
-            font-size: 1rem;
+        
+        .modern-table {
             width: 100% !important;
-            border-radius: 12px;
-            overflow: hidden;
-            background: #fff;
+            border-collapse: collapse;
         }
-        #userTable th {
-            background: linear-gradient(90deg, #2375D8 0%, #0c9083 100%);
+        .modern-table th, .modern-table td {
+            padding: 1rem 1.2rem;
+            text-align: left;
+        }
+        .modern-table th {
+            background: #2375D8;
             color: #fff;
-            font-weight: 700;
-            border: none;
-            padding: 12px 8px;
-            text-align: center;
+            font-weight: 600;
         }
-        #userTable td {
-            background: #f9fafb;
-            border: none;
-            padding: 10px 8px;
-            color: #22223b;
-            text-align: center;
-            vertical-align: middle;
+        .modern-table tbody tr:hover {
+            background: #e6f0fa;
         }
-        #userTable tr {
-            border-bottom: 1px solid #e5e7eb;
-            transition: background 0.2s;
+        .modern-table td {
+            border-bottom: 1px solid #e3e6ed;
         }
-        #userTable tr:hover {
-            background: #e3f2fd;
-        }
-        #userTable tr:last-child {
-            border-bottom: none;
-        }
+        
         .modern-btn-primary {
             background: linear-gradient(90deg, #2375D8 0%, #0c9083 100%);
             color: #fff;
             font-weight: 700;
-            font-size: 1.1rem;
-            padding: 0.7rem 1.5rem;
+            padding: 0.8rem 1.5rem;
             border: none;
             border-radius: 10px;
-            box-shadow: 0 4px 16px rgba(36,117,216,0.10);
-            transition: background 0.2s, transform 0.15s;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.7rem;
-            margin-bottom: 10px;
+            text-decoration: none;
         }
-        .modern-btn-primary:hover {
-            background: linear-gradient(90deg, #0c9083 0%, #2375D8 100%);
-            transform: translateY(-2px) scale(1.03);
-            box-shadow: 0 8px 24px rgba(36,117,216,0.18);
-        }
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px);}
-            to { opacity: 1; transform: translateY(0);}
+            from { opacity: 0; transform: translateY(18px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 
 <body>
-   <%- include('../views/shared/header.ejs') %>
- 
- 
+    <%- include('./shared/header.ejs') %>
 
-
-
-    <div class="main-content">
-        <div class="container mx-auto px-4 sm:px-8 py-8">
-            <div class="modern-table-container">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                    <div class="modern-table-title">
-                        <i class="fas fa-users"></i> User Management
-                    </div>
-                    <a href="/register" class="modern-btn-primary">
-                        <i class="fas fa-user-plus"></i> Add New User
-                    </a>
-                </div>
-                <div class="overflow-x-auto">
-                    <table id="userTable" class="display responsive nowrap">
-                        <thead>
-                            <tr class="bg-gray-50 text-gray-600 uppercase text-sm leading-normal">
-                                <th class="py-3 px-6 text-left">ID</th>
-                                <th class="py-3 px-6 text-left">Username</th>
-                                <th class="py-3 px-6 text-left">Role</th>
-                                <th class="py-3 px-6 text-left">Full Name</th>
-                                <th class="py-3 px-6 text-left">Email</th>
-                                <th class="py-3 px-6 text-left">Phone</th>
-                                <th class="py-3 px-6 text-center">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-gray-600 text-sm">
-                            <% if (users.length === 0) { %>
-                            <tr>
-                                <td colspan="7" class="py-4 px-6 text-center text-gray-500">
-                                    No users found
-                                </td>
-                            </tr>
-                            <% } else { %>
-                            <% users.forEach(user => { %>
-                            <tr class="border-b border-gray-200 hover:bg-gray-50">
-                                <td class="py-3 px-6"><%= user.id %></td>
-                                <td class="py-3 px-6"><%= user.username %></td>
-                                <td class="py-3 px-6">
-                                    <span class="px-2 py-1 text-xs rounded-full font-semibold"
-    <% if (user.role === 'admin') { %>
-        style="background:#22c55e;color:#fff;" <!-- Xanh lá cho admin -->
-    <% } else if (user.role === 'teacher') { %>
-        style="background:#ef4444;color:#fff;" <!-- Đỏ cho teacher -->
-    <% } else if (user.role === 'student') { %>
-        style="background:#f59e0b;color:#fff;" <!-- Vàng cho student -->
-    <% } else { %>
-        style="background:#9ca3af;color:#fff;" <!-- Xám cho role khác -->
-    <% } %>>
-        <%= user.role.charAt(0).toUpperCase() + user.role.slice(1) %>
-    </span>
-                                </td>
-                                <td class="py-3 px-6"><%= user.full_name || "N/A" %></td>
-                                <td class="py-3 px-6"><%= user.email || "N/A" %></td>
-                                <td class="py-3 px-6"><%= user.phone || "N/A" %></td>
-                                <td class="py-3 px-6 text-center">
-                                    <a href="/users/<%= user.id %>/edit" class="text-blue-500 hover:text-blue-700 mr-2" title="Edit"><i class="fas fa-edit"></i></a>
-                                    <form action="/users/<%= user.id %>?_method=DELETE" method="POST" style="display:inline;">
-                                        <button type="submit" class="text-red-500 hover:text-red-700" title="Delete" onclick="return confirm('Are you sure you want to delete this user?');"><i class="fas fa-trash-alt"></i></button>
-                                    </form>
-                                </td>
-                            </tr>
-                            <% }) %>
-                            <% } %>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+    <div class="modern-container">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h1 class="modern-title"><i class="fas fa-users"></i> User Management</h1>
+            <a href="/register" class="modern-btn-primary">
+                <i class="fas fa-user-plus"></i> Add New User
+            </a>
         </div>
+        
+        <table id="userTable" class="modern-table display responsive nowrap">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% users.forEach(user => { %>
+                <tr>
+                    <td><%= user.id %></td>
+                    <td><%= user.username %></td>
+                    <td>
+                        <span style="padding: 0.25rem 0.5rem; border-radius: 9999px; color: #fff; 
+                            background-color: <%= user.role === 'admin' ? '#22c55e' : user.role === 'teacher' ? '#ef4444' : '#f59e0b' %>;">
+                            <%= user.role.charAt(0).toUpperCase() + user.role.slice(1) %>
+                        </span>
+                    </td>
+                    <td><%= user.full_name || "N/A" %></td>
+                    <td><%= user.email || "N/A" %></td>
+                    <td><%= user.phone_number || "N/A" %></td>
+                    <td>
+                        <a href="/users/<%= user.id %>/edit" title="Edit"><i class="fas fa-edit"></i></a>
+                        <form action="/users/<%= user.id %>?_method=DELETE" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                            <button type="submit" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                        </form>
+                    </td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
     </div>
+    
+    <%- include('./shared/footer.ejs') %>
 
-    <footer class="relative bg-blueGray-200 pt-8 pb-6">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-wrap text-left lg:text-left">
-                <div class="w-full lg:w-6/12 px-4">
-                    <h4 class="text-3xl fonat-semibold text-blueGray-700">Liên hệ với chúng tôi!</h4>
-                    <h5 class="text-lg mt-0 mb-2 text-blueGray-600">
-                        Tìm kiếm chúng tôi trên bất kỳ mạng xã hội nào và gửi cho chúng tôi một tin nhắn! Chúng tôi sẽ
-                        trả
-                        lời bạn
-                        ngay khi có thể.
-                    </h5>
-                    <div class="mt-6 lg:mb-0 mb-6">
-                        <button
-                            class="bg-white text-lightBlue-400 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
-                            type="button">
-                            <i class="fab fa-twitter"></i></button><button
-                            class="bg-white text-lightBlue-600 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
-                            type="button">
-                            <i class="fab fa-facebook-square"></i></button><button
-                            class="bg-white text-pink-400 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
-                            type="button">
-                            <i class="fab fa-dribbble"></i></button><button
-                            class="bg-white text-blueGray-800 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
-                            type="button">
-                            <i class="fab fa-github"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="w-full lg:w-6/12 px-4">
-                    <div class="flex flex-wrap items-top mb-6">
-                        <div class="w-full lg:w-4/12 px-4 ml-auto">
-                            <span class="block uppercase text-blueGray-500 text-sm font-semibold mb-2">Bạn Đang Tìm
-                                Kiếm</span>
-                            <ul class="list-unstyled">
-                                <li>
-                                    <a class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
-                                        href="">Liên
-                                        Hệ</a>
-                                </li>
-                                <li>
-                                    <a class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
-                                        href="">Thông
-                                        Tin Mới</a>
-                                </li>
-                                <li>
-                                    <a class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
-                                        href="">Tuyển
-                                        Dụng</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <hr class="my-6 border-blueGray-300">
-            <div class="flex flex-wrap items-center md:justify-between justify-center">
-                <div class="w-full md:w-4/12 px-4 mx-auto text-center">
-                    <div class="text-sm text-blueGray-500 font-semibold py-1">
-                        Copyright © <span id="get-current-year">2025</span><a
-                            href="https://www.facebook.com/ttgdvpttnht" class="text-blueGray-500 hover:text-gray-800"
-                            target="_blank"> Talent Education</a>. Made by
-                        <a href="https://github.com/Rin-0808" class="text-blueGray-500 hover:text-blueGray-800">Rin</a>.
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-    .js\DoAnCS\views\userList.ejs
-    <!-- Add before closing body tag -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript"
         src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
-
     <script>
         $(document).ready(function () {
             $('#userTable').DataTable({
-                responsive: true,
-                pageLength: 10,
-                language: {
-                    search: "Search users:",
-                    lengthMenu: "Show _MENU_ users per page",
-                    info: "Showing _START_ to _END_ of _TOTAL_ users",
-                    paginate: {
-                        first: "First",
-                        last: "Last",
-                        next: "Next",
-                        previous: "Previous"
-                    }
-                }
+                responsive: true
             });
         });
     </script>
-
-    <style>
-        .dataTables_wrapper .dataTables_length select {
-            padding-right: 25px;
-            background-color: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 0.375rem;
-        }
-
-        .dataTables_wrapper .dataTables_filter input {
-            border: 1px solid #e2e8f0;
-            border-radius: 0.375rem;
-            padding: 0.5rem;
-            margin-left: 0.5rem;
-        }
-
-        .dataTables_wrapper .dataTables_paginate .paginate_button {
-            padding: 0.5rem 1rem;
-            margin: 0 0.25rem;
-            border-radius: 0.375rem;
-            border: 1px solid #e2e8f0;
-        }
-
-        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
-            background: #3b82f6 !important;
-            color: white !important;
-            border: 1px solid #3b82f6;
-        }
-    </style>
-
-
 </body>
+
+</html>

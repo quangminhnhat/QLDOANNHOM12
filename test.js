@@ -1,27 +1,62 @@
+require('dotenv').config();
 const sql = require("msnodesqlv8");
 
+const connectionString = process.env.CONNECTION_STRING;
 
-const connectionString =
-  "Driver={ODBC Driver 17 for SQL Server};Server=LAPTOP-ND7KAD0J;Database=DOANCS;Trusted_Connection=Yes;";
+if (!connectionString) {
+    console.error("Error: CONNECTION_STRING is not defined in your .env file.");
+    process.exit(1);
+}
 
 const query = `
 SELECT 
     u.id AS user_id,
     u.username,
-    CASE 
-        WHEN s.id IS NOT NULL THEN 'Student'
-        WHEN t.id IS NOT NULL THEN 'Teacher'
-        ELSE 'Unknown'
-    END AS user_type
+    u.role
 FROM users u
-LEFT JOIN students s ON u.id = s.user_id
-LEFT JOIN teachers t ON u.id = t.user_id;`
+`;
 
-//sql query
-sql.query(connectionString, query, (err, rows) => {
-  if (err) {
-    console.error("SQL error:", err);
-  } else {
-    console.log("Result:", rows);
-  }
-});
+async function runTestQuery() {
+    console.log("Connecting to the database...");
+    
+    const connect = () => new Promise((resolve, reject) => {
+        sql.open(connectionString, (err, conn) => {
+            if (err) {
+                return reject(err);
+            }
+            resolve(conn);
+        });
+    });
+
+    const executeQuery = (conn, q) => new Promise((resolve, reject) => {
+        conn.query(q, (err, results) => {
+            if (err) {
+                return reject(err);
+            }
+            resolve(results);
+        });
+    });
+
+    let conn;
+    try {
+        conn = await connect();
+        console.log("Connection successful.");
+        
+        console.log("Executing query...");
+        const results = await executeQuery(conn, query);
+        
+        console.log("Query Results:");
+        console.table(results);
+        
+    } catch (err) {
+        console.error("An error occurred:", err.message);
+    } finally {
+        if (conn) {
+            conn.close(() => {
+                console.log("Connection closed.");
+            });
+        }
+    }
+}
+
+runTestQuery();

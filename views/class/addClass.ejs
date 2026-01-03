@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Class | Learning Management System</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        main, .modern-container {
+            flex: 1 0 auto;
+        }
+        footer {
+            flex-shrink: 0;
+        }
+        .modern-container {
+            max-width: 1200px;
+            margin: 48px auto 0 auto;
+            padding: 2.5rem;
+            background: #ffffff; /* Light blue background */
+            border-radius: 24px; /* Increased roundness */
+            box-shadow: 0 8px 32px rgba(35, 117, 216, 0.15); /* Softer, colored shadow */
+            border: 1px solid #dbeeff;
+            animation: fadeIn 0.5s;
+        }
+        .modern-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2375D8;
+            text-align: center;
+            margin-bottom: 2rem;
+            letter-spacing: 1px;
+        }
+        .modern-form-group {
+            margin-bottom: 1.5rem;
+        }
+        .modern-form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #4a5568;
+        }
+        .modern-form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+        .modern-form-control:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+        .modern-btn-primary {
+            width: 100%;
+            background: linear-gradient(90deg, #2375D8 0%, #0c9083 100%);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding: 0.85rem 0;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(36, 117, 216, 0.1);
+            transition: background 0.2s, transform 0.15s;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.7rem;
+        }
+        .modern-btn-primary:hover {
+            background: linear-gradient(90deg, #0c9083 0%, #2375D8 100%);
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 8px 24px rgba(36, 117, 216, 0.18);
+        }
+        .modern-btn-secondary {
+            width: 100%;
+            background: #e2e8f0;
+            color: #4a5568;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 0.85rem 0;
+            border: none;
+            border-radius: 10px;
+            transition: background 0.2s, color 0.2s;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.7rem;
+            text-decoration: none;
+            text-align: center;
+        }
+        .modern-btn-secondary:hover {
+            background: #cbd5e0;
+            color: #2375D8;
+        }
+        .modern-checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+        }
+        .modern-checkbox-label {
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+            color: #374151;
+        }
+        .modern-checkbox-label input[type="checkbox"] {
+            margin-right: 0.4rem;
+        }
+        .modern-form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(18px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        .alert-box {
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 500;
+            animation: fadeIn 0.4s ease-out;
+        }
+        .alert-error {
+            background-color: #fee2e2; /* bg-red-100 */
+            color: #b91c1c; /* text-red-800 */
+            border: 1px solid #fca5a5; /* border-red-300 */
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('../shared/header') %>
+
+    <main>
+        <div class="modern-container">
+            <div class="modern-title">
+                <i class="fas fa-plus"></i> Add New Class
+            </div>
+            <div id="warning-container">
+                <% if (messages.error && messages.error.length > 0) { %>
+                    <div class="alert-box alert-error">
+                        <i class="fas fa-times-circle fa-lg"></i>
+                        <span><%= messages.error %></span>
+                    </div>
+                <% } %>
+            </div>
+            <form action="/classes" method="POST">
+                <div class="modern-form-group">
+                    <label for="class_name">Class Name</label>
+                    <input type="text"
+                        id="class_name"
+                        name="class_name"
+                        class="modern-form-control"
+                        required>
+                </div>
+                <div class="modern-form-group">
+                    <label for="course_id">Course</label>
+                    <select id="course_id"
+                        name="course_id"
+                        class="modern-form-control"
+                        required>
+                        <option value="">Select Course</option>
+                        <% courses.forEach(course => { %>
+                        <option value="<%= course.id %>"
+                            data-start="<%= course.start_date %>"
+                            data-end="<%= course.end_date %>">
+                            <%= course.course_name %>
+                        </option>
+                        <% }) %>
+                    </select>
+                </div>
+                <div class="modern-form-group">
+                    <label for="teacher_id">Teacher</label>
+                    <select id="teacher_id"
+                        name="teacher_id"
+                        class="modern-form-control"
+                        required>
+                        <option value="">Select Teacher</option>
+                        <% teachers.forEach(teacher => { %>
+                        <option value="<%= teacher.id %>">
+                            <%= teacher.full_name %>
+                        </option>
+                        <% }) %>
+                    </select>
+                </div>
+                <div class="modern-form-group">
+                    <label>Weekly Schedule</label>
+                    <div class="modern-checkbox-group">
+                        <% ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].forEach((day, index) => { %>
+                        <label class="modern-checkbox-label">
+                            <input type="checkbox"
+                                name="weekly_days"
+                                value="<%= index + 1 %>">
+                            <%= day %>
+                        </label>
+                        <% }) %>
+                    </div>
+                </div>
+                <div class="modern-form-row">
+                    <div class="modern-form-group">
+                        <label for="start_time">Start Time</label>
+                        <input type="time"
+                            id="start_time"
+                            name="start_time"
+                            step="3600"
+                            class="modern-form-control"
+                            required>
+                    </div>
+                    <div class="modern-form-group">
+                        <label for="end_time">End Time</label>
+                        <input type="time"
+                            id="end_time"
+                            name="end_time"
+                            step="3600"
+                            class="modern-form-control"
+                            required>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <a href="/classes"
+                        class="modern-btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Cancel
+                    </a>
+                    <button type="submit"
+                        class="modern-btn-primary">
+                        <i class="fas fa-plus"></i> Create Class
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+    <script>
+        const warningContainer = document.getElementById('client-side-warnings');
+    
+        function showWarning(message) {
+            warningContainer.innerHTML = `<div class="alert-box alert-error"><i class="fas fa-exclamation-triangle fa-lg"></i><span>${message}</span></div>`;
+        }
+    
+        function clearWarnings() {
+            warningContainer.innerHTML = '';
+        }
+
+        document.querySelector('form').addEventListener('submit', function(e) {
+            clearWarnings(); // Clear previous warnings
+
+            const startTime = document.getElementById('start_time').value;
+            const endTime = document.getElementById('end_time').value; 
+            const weeklyDays = document.querySelectorAll('input[name="weekly_days"]:checked');
+            
+            if (weeklyDays.length === 0) {
+                e.preventDefault();
+                showWarning('Please select at least one day for the weekly schedule.');
+                return;
+            }
+            
+            if (startTime >= endTime) {
+                e.preventDefault();
+                showWarning('End time must be after start time.');
+                return;
+            } 
+        });
+    </script>
+</body>
+
+<footer class="relative bg-blueGray-200 pt-8 pb-6">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-wrap text-left lg:text-left">
+            <div class="w-full lg:w-6/12 px-4">
+                <h4 class="text-3xl fonat-semibold text-blueGray-700">Liên hệ với chúng tôi!</h4>
+                <h5 class="text-lg mt-0 mb-2 text-blueGray-600">
+                    Tìm kiếm chúng tôi trên bất kỳ mạng xã hội nào và gửi cho chúng tôi một tin nhắn! Chúng tôi sẽ trả lời bạn
+                    ngay khi có thể.
+                </h5>
+                <div class="mt-6 lg:mb-0 mb-6">
+                    <button
+                        class="bg-white text-lightBlue-400 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
+                        type="button">
+                        <i class="fab fa-twitter"></i></button><button
+                        class="bg-white text-lightBlue-600 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
+                        type="button">
+                        <i class="fab fa-facebook-square"></i></button><button
+                        class="bg-white text-pink-400 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
+                        type="button">
+                        <i class="fab fa-dribbble"></i></button><button
+                        class="bg-white text-blueGray-800 shadow-lg font-normal h-10 w-10 items-center justify-center align-center rounded-full outline-none focus:outline-none mr-2"
+                        type="button">
+                        <i class="fab fa-github"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="w-full lg:w-6/12 px-4">
+                <div class="flex flex-wrap items-top mb-6">
+                    <div class="w-full lg:w-4/12 px-4 ml-auto">
+                        <span class="block uppercase text-blueGray-500 text-sm font-semibold mb-2">Bạn Đang Tìm Kiếm</span>
+                        <ul class="list-unstyled">
+                            <li>
+                                <a class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm" href="">Liên
+                                    Hệ</a>
+                            </li>
+                            <li>
+                                <a class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm" href="">Thông
+                                    Tin Mới</a>
+                            </li>
+                            <li>
+                                <a class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm" href="">Tuyển
+                                    Dụng</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="my-6 border-blueGray-300">
+        <div class="flex flex-wrap items-center md:justify-between justify-center">
+            <div class="w-full md:w-4/12 px-4 mx-auto text-center">
+                <div class="text-sm text-blueGray-500 font-semibold py-1">
+                    Copyright © <span id="get-current-year">2025</span><a href="https://www.facebook.com/ttgdvpttnht"
+                        class="text-blueGray-500 hover:text-gray-800" target="_blank"> Talent Education</a>. Made by
+                    <a href="https://github.com/Rin-0808" class="text-blueGray-500 hover:text-blueGray-800">Rin</a>.
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+</html>

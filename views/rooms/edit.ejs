@@ -1,73 +1,253 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Room: <%= room.room_number %></title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: #f8f9fa;
+        }
+
+        main,
+        .modern-container {
+            flex: 1 0 auto;
+        }
+
+        footer {
+            flex-shrink: 0;
+        }
+
+        .modern-container {
+            max-width: 900px;
+            margin: 48px auto 0 auto;
+            padding: 2.5rem;
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(35, 117, 216, 0.1);
+            border: 1px solid #dbeeff;
+            animation: fadeIn 0.5s;
+        }
+
+        .modern-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2375D8;
+            text-align: center;
+            margin-bottom: 2rem;
+            letter-spacing: 1px;
+        }
+
+        .modern-form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .modern-form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #4a5568;
+        }
+
+        .modern-form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .modern-form-control:focus {
+            outline: none;
+            border-color: #2375D8;
+            box-shadow: 0 0 0 4px rgba(35, 117, 216, 0.1);
+        }
+
+        .modern-btn-primary {
+            width: 100%;
+            background: linear-gradient(90deg, #2375D8 0%, #0c9083 100%);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding: 0.85rem 0;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(36, 117, 216, 0.1);
+            transition: background 0.2s, transform 0.15s;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.7rem;
+        }
+
+        .modern-btn-primary:hover {
+            background: linear-gradient(90deg, #0c9083 0%, #2375D8 100%);
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 8px 24px rgba(36, 117, 216, 0.18);
+        }
+
+        .modern-btn-secondary {
+            width: 100%;
+            background: #e2e8f0;
+            color: #4a5568;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 0.85rem 0;
+            border: none;
+            border-radius: 10px;
+            transition: background 0.2s, color 0.2s;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.7rem;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .modern-btn-secondary:hover {
+            background: #cbd5e0;
+            color: #2375D8;
+        }
+        
+        .modern-form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .furniture-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 12px;
+            background: #f9fafb;
+            border: 1px solid #e3e6ed;
+        }
+
+        .furniture-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 120px;
+            gap: 1rem;
+.
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .btn-remove {
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-align: center;
+        }
+        .btn-remove:hover {
+            background-color: #b91c1c;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
+
 <body>
     <%- include('../shared/header.ejs') %>
 
-
-    <div class="container mt-5">
-        <h1 class="mb-4">Edit Room: <%= room.room_number %></h1>
-
-        <% if (message) { %>
-            <div class="alert alert-<%= messageType %>"><%= message %></div>
-        <% } %>
-
-        <form action="/rooms/edit/<%= room.id %>" method="POST">
-            <div class="card">
-                <div class="card-header">Room Details</div>
-                <div class="card-body">
-                    <div class="mb-3">
-                        <label for="room_number" class="form-label">Room Number</label>
-                        <input type="text" class="form-control" id="room_number" name="room_number" value="<%= room.room_number %>" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="room_type" class="form-label">Room Type</label>
-                        <select class="form-select" id="room_type" name="room_type" required>
-                            <option value="phòng tự học" <%= room.room_type === 'phòng tự học' ? 'selected' : '' %>>phòng tự học</option>
-                            <option value="phòng lab" <%= room.room_type === 'phòng lab' ? 'selected' : '' %>>phòng lab</option>
-                        </select>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="size_sqm" class="form-label">Size (m²)</label>
-                            <input type="number" step="0.1" class="form-control" id="size_sqm" name="size_sqm" value="<%= room.size_sqm || '' %>">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="rent_price" class="form-label">Rent Price (VND)</label>
-                            <input type="number" class="form-control" id="rent_price" name="rent_price" value="<%= room.rent_price %>" required>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
-                        <textarea class="form-control" id="description" name="description" rows="3"><%= room.description || '' %></textarea>
-                    </div>
-                </div>
+    <main>
+        <div class="modern-container">
+            <div class="modern-title">
+                <i class="fas fa-edit"></i> Edit Room: <%= room.room_number %>
             </div>
 
-            <div class="card mt-4">
-                <div class="card-header">Manage Furniture</div>
-                <div class="card-body">
+            <% if (message) { %>
+            <div class="alert alert-<%= messageType %>">
+                <%= message %>
+            </div>
+            <% } %>
+
+            <form action="/rooms/edit/<%= room.id %>" method="POST">
+                <div class="modern-form-group">
+                    <label for="room_number">Room Number</label>
+                    <input type="text" class="modern-form-control" id="room_number" name="room_number" value="<%= room.room_number %>" required>
+                </div>
+                <div class="modern-form-group">
+                    <label for="room_type">Room Type</label>
+                    <select class="modern-form-control" id="room_type" name="room_type" required>
+                        <option value="phòng tự học" <%= room.room_type === 'phòng tự học' ? 'selected' : '' %>>phòng tự học</option>
+                        <option value="phòng lab" <%= room.room_type === 'phòng lab' ? 'selected' : '' %>>phòng lab</option>
+                    </select>
+                </div>
+                <div class="modern-form-row">
+                    <div class="modern-form-group">
+                        <label for="size_sqm">Size (m²)</label>
+                        <input type="number" step="0.1" class="modern-form-control" id="size_sqm" name="size_sqm" value="<%= room.size_sqm || '' %>">
+                    </div>
+                    <div class="modern-form-group">
+                        <label for="rent_price">Rent Price (VND)</label>
+                        <input type="number" class="modern-form-control" id="rent_price" name="rent_price" value="<%= room.rent_price %>" required>
+                    </div>
+                </div>
+                <div class="modern-form-group">
+                    <label for="description">Description</label>
+                    <textarea class="modern-form-control" id="description" name="description" rows="3"><%= room.description || '' %></textarea>
+                </div>
+
+                <div class="furniture-section">
+                    <h3 style="font-size: 1.4rem; font-weight: 600; color: #374151; margin-bottom: 1rem;">Manage Furniture</h3>
                     <div id="furniture-container">
                         <!-- Dynamic furniture rows will be added here -->
                     </div>
-                    <button type="button" id="add-furniture-btn" class="btn btn-outline-primary mt-2">Add Furniture</button>
+                    <button type="button" id="add-furniture-btn" class="modern-btn-secondary" style="width: auto; padding: 0.6rem 1.5rem;">
+                        <i class="fas fa-plus"></i> Add Furniture
+                    </button>
                 </div>
-            </div>
 
-            <div class="mt-4">
-                <button type="submit" class="btn btn-primary">Save Changes</button>
-                <a href="/rooms/list" class="btn btn-outline-secondary">Cancel</a>
-            </div>
-        </form>
-    </div>
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <a href="/rooms/list" class="modern-btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Cancel
+                    </a>
+                    <button type="submit" class="modern-btn-primary">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <%- include('../shared/footer.ejs') %>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const allFurniture = <%- JSON.stringify(allFurniture) %>;
             const roomFurniture = new Map(<%- JSON.stringify(Array.from(roomFurniture.entries())) %>);
             const container = document.getElementById('furniture-container');
@@ -78,7 +258,7 @@
             function createFurnitureRow(selectedFurnitureId = '', quantity = 1) {
                 const rowId = `furniture-row-${furnitureCounter++}`;
                 const row = document.createElement('div');
-                row.className = 'row mb-2 align-items-center';
+                row.className = 'furniture-row';
                 row.id = rowId;
 
                 let optionsHtml = '<option value="">Select Furniture...</option>';
@@ -88,17 +268,13 @@
                 });
 
                 row.innerHTML = `
-                    <div class="col-md-5">
-                        <select class="form-select" name="furniture_ids[]" required>
-                            ${optionsHtml}
-                        </select>
-                    </div>
-                    <div class="col-md-5">
-                        <input type="number" class="form-control" name="quantities[]" placeholder="Quantity" value="${quantity}" min="1" required>
-                    </div>
-                    <div class="col-md-2 text-end">
-                        <button type="button" class="btn btn-danger btn-sm" onclick="document.getElementById('${rowId}').remove()">Remove</button>
-                    </div>
+                    <select class="modern-form-control" name="furniture_ids[]" required>
+                        ${optionsHtml}
+                    </select>
+                    <input type="number" class="modern-form-control" name="quantities[]" placeholder="Quantity" value="${quantity}" min="1" required>
+                    <button type="button" class="btn-remove" onclick="document.getElementById('${rowId}').remove()">
+                        <i class="fas fa-trash-alt"></i> Remove
+                    </button>
                 `;
                 container.appendChild(row);
             }
@@ -114,4 +290,5 @@
         });
     </script>
 </body>
+
 </html>

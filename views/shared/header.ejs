@@ -5,15 +5,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QLDOAN - Room Rental Management</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .modern-navbar {
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .modern-navbar .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #2375D8;
+        }
+        .modern-navbar .nav-link {
+            font-weight: 500;
+            color: #333;
+            transition: color 0.2s;
+            padding: 0.5rem 1rem;
+        }
+        .modern-navbar .nav-link:hover, .modern-navbar .nav-link.active {
+            color: #2375D8;
+        }
+        .modern-navbar .dropdown-menu {
+            border: none;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            border-radius: 12px;
+        }
+        .modern-navbar .dropdown-item {
+            font-weight: 500;
+        }
+        .modern-navbar .dropdown-item:hover {
+            background-color: #f0f4f8;
+            color: #2375D8;
+        }
+        .modern-navbar .logout-btn {
+            background: #e6f0fa;
+            color: #2375D8;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .modern-navbar .logout-btn:hover {
+            background: #2375D8;
+            color: #fff;
+        }
+    </style>
 </head>
 
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg bg-light modern-navbar">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">QLDOAN</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -35,28 +79,35 @@
                     <% } %>
                     
                     <% if (user && (user.role === 'admin' || user.role === 'employee')) { %>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/rooms/list">Rooms</a>
-                        <a class="nav-link" href="/furniture/list">Furniture</a>
-                        <a class="nav-link" href="/renting/pending">Pending Rentals</a>
-                        <a class="nav-link" href="/renting/in-progress">In-Progress Rentals</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="managementDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Management
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="managementDropdown">
+                            <li><a class="dropdown-item" href="/rooms/list">Rooms</a></li>
+                            <li><a class="dropdown-item" href="/furniture/list">Furniture</a></li>
+                            <li><a class="dropdown-item" href="/renting/pending">Pending Rentals</a></li>
+                            <li><a class="dropdown-item" href="/renting/in-progress">In-Progress Rentals</a></li>
+                            <% if (user.role === 'admin') { %>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/users">User Management</a></li>
+                            <% } %>
+                        </ul>
                     </li>
-                    <% } %>
-                    <% if (user && user.role === 'admin') { %>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/users">User Management</a>
                     <% } %>
                 </ul>
                 <ul class="navbar-nav">
                     <% if (user) { %>
-                    <li class="nav-item"><a class="nav-link" href="/profile">Welcome, <%= user.full_name %></a></li>
-                    <div class="nav-button">
-                        <form action="/logout?_method=DELETE" method="POST">
-                            <button type="submit" class="nav-button">
-                                <i class="fas fa-right-from-bracket"></i><span>Logout</span>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/profile">Welcome, <%= user.full_name %></a>
+                    </li>
+                    <li class="nav-item">
+                        <form action="/logout?_method=DELETE" method="POST" class="d-flex">
+                            <button type="submit" class="logout-btn">
+                                <i class="fas fa-sign-out-alt"></i> Logout
                             </button>
                         </form>
-                    </div>
+                    </li>
                     <% } else { %>
                     <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
                     <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
@@ -65,5 +116,7 @@
             </div>
         </div>
     </nav>
-
-    <div class="container mt-4">
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

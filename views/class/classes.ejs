@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Room List</title>
+    <title>Class List</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css">
@@ -99,7 +99,7 @@ footer {
             font-size: 1rem;
             color: #374151;
         }
-        .modern-table .actions a, .modern-table .actions button {
+        .modern-table .actions a, .modern-table .actions form button {
             color: #2375D8;
             margin-right: 0.5rem;
             font-size: 1.1rem;
@@ -109,13 +109,13 @@ footer {
             cursor: pointer;
             padding: 0 0.3rem;
         }
-        .modern-table .actions a:hover, .modern-table .actions button:hover {
+        .modern-table .actions a:hover, .modern-table .actions form button:hover {
             color: #0c9083;
         }
-        .modern-table .actions button.delete {
+        .modern-table .actions form button.delete {
             color: #ef4444;
         }
-        .modern-table .actions button.delete:hover {
+        .modern-table .actions form button.delete:hover {
             color: #b91c1c;
         }
         @keyframes fadeIn {
@@ -128,58 +128,58 @@ footer {
 <body>
    <%- include('../shared/header') %>
  
+ 
+
+
     <main>
         <div class="modern-container">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
                 <div class="modern-title">
-                    <i class="fas fa-person-booth"></i> Room List
+                    <i class="fas fa-users"></i> Class List
                 </div>
-                <a href="/rooms/add" class="modern-btn-primary">
-                    <i class="fas fa-plus"></i> Add New Room
+                <a href="/classes/new" class="modern-btn-primary">
+                    <i class="fas fa-plus"></i> Add New Class
                 </a>
             </div>
-            <% if (message) { %>
-                <div class="message <%= messageType %>">
-                    <%= message %>
-                </div>
-            <% } %>
             <div class="overflow-x-auto">
                 <table class="modern-table">
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Number</th>
-                            <th>Type</th>
-                            <th>Size (m²)</th>
-                            <th>Price</th>
-                            <th>Furniture</th>
+                            <th>Name</th>
+                            <th>Course</th>
+                            <th>Teacher</th>
+                            <th>Time</th>
+                            <th>Schedule</th>
+                            <th>Students</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <% if (rooms && rooms.length > 0) { %>
-                            <% rooms.forEach(room => { %>
-                                <tr>
-                                    <td><strong><%= room.id %></strong></td>
-                                    <td>
-                                        <a href="/rooms/view/<%= room.id %>" style="color: #007bff; text-decoration: none; font-weight: 600;">
-                                            <%= room.room_number %>
-                                        </a>
-                                    </td>
-                                    <td><%= room.room_type %></td>
-                                    <td><%= room.size_sqm || 'N/A' %></td>
-                                    <td><%= parseFloat(room.rent_price).toLocaleString('vi-VN') %> VND</td>
-                                    <td><%= room.furniture_count %> items</td>
-                                    <td class="actions">
-                                        <a href="/rooms/edit/<%= room.id %>" title="Edit"><i class="fas fa-edit"></i></a>
-                                        <button title="Delete" class="delete" onclick="showDeleteModal(<%= room.id %>, '<%= room.room_number %>')"><i class="fas fa-trash-alt"></i></button>
-                                    </td>
-                                </tr>
-                            <% }); %>
+                        <% if (classes.length === 0) { %>
+                        <tr>
+                            <td colspan="8" style="text-align:center; color:#888; padding:2rem;">No classes found</td>
+                        </tr>
                         <% } else { %>
-                            <tr>
-                                <td colspan="7" style="text-align:center; color:#888; padding:2rem;">No rooms found</td>
-                            </tr>
+                        <% classes.forEach(cls => { %>
+                        <tr>
+                            <td><%= cls.id %></td>
+                            <td><%= cls.class_name %></td>
+                            <td><%= cls.course_name %></td>
+                            <td><%= cls.teacher_name %></td>
+                            <td><%= cls.formatted_start_time %> - <%= cls.formatted_end_time %></td>
+                            <td><%= cls.scheduleDisplay %></td>
+                            <td><%= cls.student_count %> enrolled</td>
+                            <td class="actions">
+                                <a href="/classes/<%= cls.id %>/students" title="View Students"><i class="fas fa-users"></i></a>
+                                <a href="/classes/<%= cls.id %>/edit" title="Edit"><i class="fas fa-edit"></i></a>
+                                
+                                <form action="/classes/<%= cls.id %>?_method=DELETE" method="POST" style="display:inline;">
+                                    <button type="submit" title="Delete" class="delete" onclick="return confirm('Are you sure you want to delete this class? This will also delete all enrollments and schedules for this class.');"><i class="fas fa-trash-alt"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                        <% }) %>
                         <% } %>
                     </tbody>
                 </table>
@@ -187,26 +187,17 @@ footer {
         </div>
     </main>
 
-    <div id="deleteModal" class="modal">
-        <div class="modal-content">
-            <h3>Confirm Deletion</h3>
-            <p>Are you sure you want to delete this room?<br><strong id="roomNumber"></strong></p>
-            <div class="modal-buttons">
-                <button class="btn-cancel" onclick="closeDeleteModal()">Cancel</button>
-                <form id="deleteForm" method="POST" style="display:inline;">
-                    <button type="submit" class="btn-confirm">Delete</button>
-                </form>
-            </div>
-        </div>
-    </div>
-    
+
     <footer class="relative bg-blueGray-200 pt-8 pb-6">
         <div class="container mx-auto px-4">
             <div class="flex flex-wrap text-left lg:text-left">
                 <div class="w-full lg:w-6/12 px-4">
-                    <h4 class="text-3xl fonat-semibold text-blueGray-700">Contact us!</h4>
+                    <h4 class="text-3xl fonat-semibold text-blueGray-700">Liên hệ với chúng tôi!</h4>
                     <h5 class="text-lg mt-0 mb-2 text-blueGray-600">
-                        Find us on any social network and send us a message! We will answer you as soon as possible.
+                        Tìm kiếm chúng tôi trên bất kỳ mạng xã hội nào và gửi cho chúng tôi một tin nhắn! Chúng tôi sẽ
+                        trả
+                        lời bạn
+                        ngay khi có thể.
                     </h5>
                     <div class="mt-6 lg:mb-0 mb-6">
                         <button
@@ -228,19 +219,23 @@ footer {
                 <div class="w-full lg:w-6/12 px-4">
                     <div class="flex flex-wrap items-top mb-6">
                         <div class="w-full lg:w-4/12 px-4 ml-auto">
-                            <span class="block uppercase text-blueGray-500 text-sm font-semibold mb-2">Are you looking for</span>
+                            <span class="block uppercase text-blueGray-500 text-sm font-semibold mb-2">Bạn Đang Tìm
+                                Kiếm</span>
                             <ul class="list-unstyled">
                                 <li>
                                     <a class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
-                                        href="">Contact</a>
+                                        href="">Liên
+                                        Hệ</a>
                                 </li>
                                 <li>
                                     <a class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
-                                        href="">Last News</a>
+                                        href="">Thông
+                                        Tin Mới</a>
                                 </li>
                                 <li>
                                     <a class="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
-                                        href="">Recruitment</a>
+                                        href="">Tuyển
+                                        Dụng</a>
                                 </li>
                             </ul>
                         </div>
@@ -263,24 +258,22 @@ footer {
 
 
     <script>
-        function showDeleteModal(id, number) {
-            const deleteForm = document.getElementById('deleteForm');
-            deleteForm.action = `/rooms/delete/${id}?_method=POST`;
-            document.getElementById('roomNumber').innerText = `Room: ${number}`;
-            document.getElementById('deleteModal').style.display = 'flex';
-        }
-
-        function closeDeleteModal() {
-            document.getElementById('deleteModal').style.display = 'none';
-        }
-
-        window.onclick = function(event) {
-            const modal = document.getElementById('deleteModal');
-            if (event.target == modal) {
-                closeDeleteModal();
-            }
-        }
+        $(document).ready(function () {
+            $('#classTable').DataTable({
+                responsive: true,
+                language: {
+                    search: "Tìm kiếm:",
+                    lengthMenu: "Hiển thị _MENU_ lớp",
+                    info: "Hiển thị _START_ đến _END_ của _TOTAL_ lớp",
+                    paginate: {
+                        previous: "Trước",
+                        next: "Sau"
+                    }
+                }
+            });
+        });
     </script>
+
 </body>
 
 </html>

@@ -146,19 +146,16 @@ router.post('/delete/:id', authenticateRole(["admin", "employee"]), async (req, 
         const checkResult = await executeQuery(checkQuery);
         
         if (checkResult[0].count > 0) {
-            return res.json({ 
-                success: false, 
-                message: 'Không thể xóa đồ dùng này vì nó đang được sử dụng trong các phòng' 
-            });
+            return res.redirect('/furniture/list?message=Không thể xóa đồ dùng này vì nó đang được sử dụng trong các phòng&messageType=error');
         }
 
         const query = `DELETE FROM furniture WHERE id = ${id}`;
         await executeQuery(query);
         
-        res.json({ success: true, message: 'Xóa đồ dùng thành công' });
+        res.redirect('/furniture/list?message=Xóa đồ dùng thành công&messageType=success');
     } catch (error) {
         console.error('Error deleting furniture:', error);
-        res.status(500).json({ success: false, message: 'Lỗi khi xóa đồ dùng' });
+        res.redirect('/furniture/list?message=Lỗi khi xóa đồ dùng&messageType=error');
     }
 });
 

@@ -112,8 +112,8 @@
                 <div class="modern-form-group">
                     <label>Role</label>
                     <select name="role" class="modern-form-control" <%= (user.role !== 'admin' && user.id === editUser.id) ? 'disabled' : '' %>>
-                        <option value="student" <%= editUser.role === 'student' ? 'selected' : '' %>>Student</option>
-                        <option value="teacher" <%= editUser.role === 'teacher' ? 'selected' : '' %>>Teacher</option>
+                        <option value="customer" <%= editUser.role === 'customer' ? 'selected' : '' %>>Customer</option>
+                        <option value="employee" <%= editUser.role === 'employee' ? 'selected' : '' %>>Employee</option>
                         <option value="admin" <%= editUser.role === 'admin' ? 'selected' : '' %> <%= user.role !== 'admin' ? 'disabled' : '' %>>Admin</option>
                     </select>
                 </div>

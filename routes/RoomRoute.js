@@ -342,10 +342,7 @@ router.post('/delete/:id', authenticateRole(["admin", "employee"]), async (req, 
         const checkResult = await executeQuery(checkQuery, [id]);
         
         if (checkResult[0].count > 0) {
-            return res.json({ 
-                success: false, 
-                message: 'Cannot delete this room as it has active rental contracts.' 
-            });
+            return res.redirect('/rooms/list?message=Cannot delete this room as it has active rental contracts.&messageType=error');
         }
 
         // Delete room furniture assignments first
@@ -358,10 +355,10 @@ router.post('/delete/:id', authenticateRole(["admin", "employee"]), async (req, 
         const query = `DELETE FROM rooms WHERE id = ?`;
         await executeQuery(query, [id]);
         
-        res.json({ success: true, message: 'Room deleted successfully' });
+        res.redirect('/rooms/list?message=Room deleted successfully&messageType=success');
     } catch (error) {
         console.error('Error deleting room:', error);
-        res.status(500).json({ success: false, message: 'Error deleting room' });
+        res.redirect('/rooms/list?message=Error deleting room&messageType=error');
     }
 });
 
